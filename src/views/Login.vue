@@ -10,7 +10,7 @@
                             </v-toolbar>
                             <v-card-text>
                                 <v-form>
-                                    <v-text-field v-model="loginForm.email" id="email" prepend-icon="mdi-account"
+                                    <v-text-field v-model="loginForm.email" id="email" prepend-icon="mdi-email"
                                         name="email" label="E-Mail" type="text" v-on:keyup.enter="login"></v-text-field>
                                     <v-text-field v-model="loginForm.password" id="password" prepend-icon="mdi-lock"
                                         name="password" label="Passwort" type="password" v-on:keyup.enter="login">
@@ -42,7 +42,7 @@
                                     <v-text-field v-model="registerForm.name" id="name" prepend-icon="mdi-account"
                                         name="name" label="Benutzername" type="text" v-on:keyup.enter="register">
                                     </v-text-field>
-                                    <v-text-field v-model="registerForm.email" id="email" prepend-icon="mdi-account"
+                                    <v-text-field v-model="registerForm.email" id="email" prepend-icon="mdi-email"
                                         name="email" label="E-Mail" type="text" v-on:keyup.enter="register">
                                     </v-text-field>
                                     <v-text-field v-model="registerForm.password" id="password" prepend-icon="mdi-lock"
@@ -76,19 +76,19 @@
     } from "firebase/auth";
     import {
         getFirestore,
-        collection,
-        addDoc
+        doc, 
+        setDoc
     } from "firebase/firestore";
 
     export default {
         data() {
             return {
-                registerForm: {
-                    name: "",
+                loginForm: {
                     email: "",
                     password: ""
                 },
-                loginForm: {
+                registerForm: {
+                    name: "",
                     email: "",
                     password: ""
                 },
@@ -97,6 +97,16 @@
             };
         },
         methods: {
+            login() {
+                const auth = getAuth();
+                signInWithEmailAndPassword(auth, this.loginForm.email, this.loginForm.password)
+                    .then(data => {
+                        console.log(data)
+                    })
+                    .catch(err => {
+                        this.error = err.message;
+                    });
+            },
             register() {
                 const auth = getAuth();
                 const db = getFirestore();
@@ -107,11 +117,9 @@
                             rights: 0
                         }).then(() => {
                             try {
-                                const docRef = addDoc(collection(db, "Patienten"), {
-                                    uid: data.user.uid,
+                                setDoc(doc(db, "Rechte", data.user.uid), {
                                     rights: 0
                                 });
-                                console.log("Document written with ID: ", docRef.id);
                             } catch (e) {
                                 console.error("Error adding document: ", e);
                             }
@@ -125,16 +133,6 @@
                         // ..
                     });
             },
-            login() {
-                const auth = getAuth();
-                signInWithEmailAndPassword(auth, this.loginForm.email, this.loginForm.password)
-                    .then(data => {
-                        console.log(data)
-                    })
-                    .catch(err => {
-                        this.error = err.message;
-                    });
-            }
         },
     };
 </script>

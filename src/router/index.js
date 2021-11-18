@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Medikamente from '../components/Medikamente'
-import Kalender from '../components/Kalender'
+import Medikamente from '../components/Patient/Medikamente'
+import Kalender from '../components/Patient/Kalender'
 
 Vue.use(VueRouter)
 

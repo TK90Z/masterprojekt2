@@ -31,8 +31,8 @@ const projectFirestore = getFirestore(app)
 export { projectAuth, projectFirestore }
 
 projectAuth.onAuthStateChanged(user => {
-  console.log("You are logged in now!")
-  console.log(user)
+  //console.log("You are logged in now!")
+  //console.log(user)
   store.dispatch("fetchUser", user);
 });
 

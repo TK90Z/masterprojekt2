@@ -61,9 +61,6 @@
       logout() {
         const auth = getAuth();
         signOut(auth).then(() => {
-          this.$router.replace({
-            name: "login"
-          });
         })
       }
     },
