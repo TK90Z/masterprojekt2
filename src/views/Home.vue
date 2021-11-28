@@ -44,12 +44,12 @@
         drawer: null,
         items: [{
             title: 'Medikamente',
-            icon: 'mdi-office-building',
+            icon: 'mdi-pill',
             link: "/medikamente"
           },
           {
             title: 'Kalender',
-            icon: 'mdi-office-building-outline',
+            icon: 'mdi-calendar',
             link: "/kalender"
           },
         ],
