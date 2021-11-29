@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <main class="py-4">
+  <v-app>
+    <main>
       <login v-if="!isLoggedIn"></login>
       <home v-if="isLoggedIn"></home>
     </main>
-  </div>
+  </v-app>
 </template>
 
 <script>

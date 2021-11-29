@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Medikamente from '../components/Patient/Medikamente'
-import Kalender from '../components/Patient/Kalender'
+import TabKalender from '../components/Patient/TabKalender'
 
 Vue.use(VueRouter)
 
@@ -14,7 +14,7 @@ const routes = [
 {
   path: '/kalender',
   name: 'Kalender',
-  component: Kalender
+  component: TabKalender
 },
 ]
 
