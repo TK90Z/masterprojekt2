@@ -15,19 +15,52 @@
       </v-btn>
     </v-toolbar>
     <v-navigation-drawer v-model="drawer" absolute temporary>
+      <div>
+       <v-card-text>Patient</v-card-text>
       <v-list dense>
-        <v-list-item v-for="item in items" :key="item.title" :to="item.link">
+        <v-list-item v-for="item in patientItems" :key="item.title" :to="item.link">
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      </div>
+
+<div>
+  <v-card-text>Arzt</v-card-text>
+      <v-list dense>
+        <v-list-item v-for="item in docItems" :key="item.title" :to="item.link">
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ item.title }}<v-badge style="margin-left:5px" v-if="item.badge && newErrors != 0"
-                :content=newErrors></v-badge>
+            <v-list-item-title>{{ item.title }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
+</div>
+      
+<div>
+  <v-card-text>Admin</v-card-text>
+      <v-list dense>
+        <v-list-item v-for="item in adminItems" :key="item.title" :to="item.link">
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+</div>
+      
     </v-navigation-drawer>
     <router-view />
   </v-card>
@@ -42,7 +75,29 @@
     data() {
       return {
         drawer: null,
-        items: [{
+        patientItems: [{
+            title: 'Medikamente',
+            icon: 'mdi-office-building',
+            link: "/medikamente"
+          },
+          {
+            title: 'Kalender',
+            icon: 'mdi-office-building-outline',
+            link: "/kalender"
+          },
+        ],
+        docItems: [{
+            title: 'Medikamente',
+            icon: 'mdi-office-building',
+            link: "/medikamente"
+          },
+          {
+            title: 'Kalender',
+            icon: 'mdi-office-building-outline',
+            link: "/kalender"
+          },
+        ],
+        adminItems: [{
             title: 'Medikamente',
             icon: 'mdi-office-building',
             link: "/medikamente"
@@ -55,13 +110,11 @@
         ],
       }
     },
-    computed: {
-    },
+    computed: {},
     methods: {
       logout() {
         const auth = getAuth();
-        signOut(auth).then(() => {
-        })
+        signOut(auth).then(() => {})
       }
     },
   }

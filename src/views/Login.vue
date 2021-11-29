@@ -136,7 +136,7 @@
         },
     };
 </script>
-<style>
+<style scoped>
     .clickable-text {
         cursor: pointer;
         text-decoration: underline;
