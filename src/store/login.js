@@ -1,20 +1,22 @@
-import { doc, getDoc, getFirestore, } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  getFirestore,
+} from "firebase/firestore";
 const state = {
-  user: {
-    loggedIn: false,
-    data: null,
-    rights: null
-  }
+  loggedIn: false,
+  rights: null,
+  data:null
 }
 const mutations = {
   SET_LOGGED_IN(state, value) {
-    state.user.loggedIn = value;
+    state.loggedIn = value;
   },
   SET_USER(state, data) {
-    state.user.data = data;
+    state.data = data;
   },
-  setRights(state, value){
-    state.user.rights = value;
+  setRights(state, value) {
+    state.rights = value;
   }
 }
 const actions = {
@@ -25,12 +27,13 @@ const actions = {
     if (user) {
       commit("SET_USER", {
         displayName: user.displayName,
-        email: user.email
+        email: user.email,
+        uid: user.uid
       });
     } else {
       commit("SET_USER", null);
     }
-    console.log(state.user.loggedIn)
+    console.log(state.loggedIn)
 
     const db = getFirestore();
     const docRef = doc(db, "Rechte", user.uid);
@@ -38,7 +41,7 @@ const actions = {
 
     if (docSnap.exists()) {
       console.log("Document data:", docSnap.data().rights);
-      commit("setRights", 0);
+      commit("setRights", docSnap.data().rights);
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
@@ -50,10 +53,13 @@ const getters = {
     return state.user
   },
   isLoggedIn(state) {
-    return state.user.loggedIn
+    return state.loggedIn
   },
   getRights(state) {
-    return state.user.rights
+    return state.rights
+  },
+  getUID(state) {
+    return state.data.uid
   },
 }
 

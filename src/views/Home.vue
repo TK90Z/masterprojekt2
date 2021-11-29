@@ -62,7 +62,9 @@
 </div>
       
     </v-navigation-drawer>
-    <router-view />
+    <div data-app>
+      <router-view />
+</div>
   </v-card>
 </template>
 

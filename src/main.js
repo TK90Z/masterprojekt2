@@ -6,10 +6,8 @@ import vuetify from './plugins/vuetify'
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
 import { initializeApp } from "firebase/app"
-// import firebase from "firebase/app"
 import { getAuth } from "firebase/auth"
 import { getFirestore } from "firebase/firestore"
-import "firebase/firestore"
 
 Vue.config.productionTip = false
 
@@ -31,10 +29,6 @@ const projectAuth = getAuth(app)
 const projectFirestore = getFirestore(app)
 
 export { projectAuth, projectFirestore }
-
-//const db = firebase.getFirestore(app);
-
-//export { db }
 
 projectAuth.onAuthStateChanged(user => {
   //console.log("You are logged in now!")
