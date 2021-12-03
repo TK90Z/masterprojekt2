@@ -1,7 +1,7 @@
 <template>
   <v-card color="" flat tile height="100vh" width="100vw">
     <v-toolbar dark color="primary">
-      <v-app-bar-nav-icon color="primary" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Medication-Master</v-toolbar-title>
 

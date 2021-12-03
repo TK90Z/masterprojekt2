@@ -1,6 +1,6 @@
 <template>
   <v-row class="fill-height">
-    <AddEvent v-model="addEventDialog" />
+    <AddEvent :newEvent=newEvent :events=events v-model="addEventDialog" />
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
@@ -49,7 +49,7 @@
       </v-sheet>
       <v-sheet height="600">
         <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :event-color="getEventColor"
-          :type="type" @click:event="showEvent" @click:more="viewDay" @click:day="sayHello" @click:date="viewDay" @change="updateRange">
+          :type="type" @click:event="showEvent" @click:more="viewDay" @click:time="addEvent" @click:day="addEvent" @click:date="viewDay" @change="updateRange">
         </v-calendar>
         <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
           <v-card color="grey lighten-4" min-width="350px" flat>
@@ -118,6 +118,10 @@ import AddEvent from './AddEvent.vue'
       addEventDialog:false,
       focus: '',
       type: 'month',
+      newEvent: {
+        date: String,
+        time: String,
+      },
       typeToLabel: {
         month: 'Monat',
         week: 'Woche',
@@ -141,8 +145,14 @@ import AddEvent from './AddEvent.vue'
       }
     },
     methods: {
-      sayHello(info){
+      addEvent(info){
         console.log(info)
+        console.log(info.date)
+        console.log(info.time)
+        this.newEvent.date = JSON.parse(JSON.stringify(info.date))
+        this.newEvent.time = JSON.parse(JSON.stringify(info.time))
+        console.log(this.newEvent.date)
+        console.log(this.newEvent.time)
         this.addEventDialog = true
       },
       viewDay({
@@ -169,6 +179,7 @@ import AddEvent from './AddEvent.vue'
       }) {
         const open = () => {
           this.selectedEvent = event
+          console.log(event)
           this.selectedElement = nativeEvent.target
           requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
         }
