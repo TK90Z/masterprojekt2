@@ -118,7 +118,8 @@
                         }).then(() => {
                             try {
                                 setDoc(doc(db, "Rechte", data.user.uid), {
-                                    rights: 0
+                                    rights: 0,
+                                    name: this.registerForm.name,
                                 });
                             } catch (e) {
                                 console.error("Error adding document: ", e);

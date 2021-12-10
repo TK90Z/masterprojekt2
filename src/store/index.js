@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 import login from './login'
 import ownEvents from './ownEvents'
 import foreignEvents from './foreignEvents'
+import patients from './patients'
+import doctors from './doctors'
 
 Vue.use(Vuex)
 
@@ -16,6 +18,8 @@ export default new Vuex.Store({
   modules: {
     login,
     ownEvents,
-    foreignEvents
+    foreignEvents,
+    patients,
+    doctors
   }
 })

@@ -20,6 +20,8 @@
             {{ $refs.calendar.title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
+          <v-autocomplete v-model='doctor' :items='doctors' item-text="name" item-value="uid" label='Doktor' v-on:change='changeDoctor'
+            class="autocomplete_doctor"></v-autocomplete>
           <v-menu bottom right>
             <template v-slot:activator="{ on, attrs }">
               <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
@@ -58,6 +60,7 @@
 <script>
   export default {
     data: () => ({
+      doctor: null,
       focus: '',
       type: 'month',
       typeToLabel: {
@@ -72,17 +75,24 @@
     }),
     mounted() {
       this.$refs.calendar.checkChange()
-      this.$store.dispatch("fetchForeignEvents", this.$store.getters.getUID);
+      this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
+      this.$store.dispatch("fetchDoctors");
     },
     created() {
       this.$store.dispatch("fetchForeignEvents", this.$store.getters.getUID);
     },
     computed: {
+      doctors() {
+        return this.$store.getters.getDoctors
+      },
       events() {
         return this.$store.getters.getForeignEvents
       }
     },
     methods: {
+      changeDoctor(doctor) {
+        console.log(doctor)
+      },
       viewDay({
         date
       }) {
@@ -129,3 +139,13 @@
     },
   }
 </script>
+
+<style>
+  .autocomplete_doctor .v-text-field__details {
+    display: none
+  }
+
+  .autocomplete_doctor {
+    margin-right: 15px;
+  }
+</style>

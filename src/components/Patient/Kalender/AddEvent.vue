@@ -118,6 +118,13 @@
                 if (value) {
                     this.date = this.newEvent.date
                     this.start = this.newEvent.time
+                    if (this.start == "") {
+                        this.end = ""
+                    } else {
+                        var startParts = this.start.split(":")
+                        var endTime = parseInt(startParts[0]) < 10 ? "0" + (parseInt(startParts[0]) + 1).toString() + ":" + startParts[1] : (parseInt(startParts[0]) + 1).toString() + ":" + startParts[1]
+                        this.end = endTime
+                    }
                 }
             }
         },
@@ -198,7 +205,7 @@
                     this.startIsValid = false
                     this.formIsValid = false
                     return 'Invalid time.'
-                } else if (endHappyHourD < startHappyHourD) {
+                } else if (endHappyHourD <= startHappyHourD) {
                     this.startIsValid = false
                     this.formIsValid = false
                     return 'End has to be after start.'
@@ -231,7 +238,7 @@
                     this.endIsValid = false
                     this.formIsValid = false
                     return 'Invalid time.'
-                } else if (endHappyHourD < startHappyHourD) {
+                } else if (endHappyHourD <= startHappyHourD) {
                     this.endIsValid = false
                     this.formIsValid = false
                     return 'End has to be after start.'

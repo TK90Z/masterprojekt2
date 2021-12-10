@@ -146,13 +146,8 @@ import AddEvent from './AddEvent.vue'
     },
     methods: {
       addEvent(info){
-        console.log(info)
-        console.log(info.date)
-        console.log(info.time)
         this.newEvent.date = JSON.parse(JSON.stringify(info.date))
         this.newEvent.time = JSON.parse(JSON.stringify(info.time))
-        console.log(this.newEvent.date)
-        console.log(this.newEvent.time)
         this.addEventDialog = true
       },
       viewDay({

@@ -1,7 +1,7 @@
 <template>
   <v-card color="" flat tile height="100vh" width="100vw">
     <v-toolbar dark color="primary">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon v-if="rights != 0" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Medication-Master</v-toolbar-title>
 
@@ -15,56 +15,57 @@
       </v-btn>
     </v-toolbar>
     <v-navigation-drawer v-model="drawer" absolute temporary>
-      <div>
-       <v-card-text>Patient</v-card-text>
-      <v-list dense>
-        <v-list-item v-for="item in patientItems" :key="item.title" :to="item.link">
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+      <div v-if="rights == 1 || rights == 4">
+        <v-card-text>Patient</v-card-text>
+        <v-list dense>
+          <v-list-item v-for="item in patientItems" :key="item.title" :to="item.link">
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
       </div>
 
-<div>
-  <v-card-text>Arzt</v-card-text>
-      <v-list dense>
-        <v-list-item v-for="item in docItems" :key="item.title" :to="item.link">
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
+      <div v-if="rights == 2 || rights == 4">
+        <v-card-text>Arzt</v-card-text>
+        <v-list dense>
+          <v-list-item v-for="item in docItems" :key="item.title" :to="item.link">
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-</div>
-      
-<div>
-  <v-card-text>Admin</v-card-text>
-      <v-list dense>
-        <v-list-item v-for="item in adminItems" :key="item.title" :to="item.link">
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-</div>
-      
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </div>
+
+      <div v-if="rights == 3 || rights == 4">
+        <v-card-text>Admin</v-card-text>
+        <v-list dense>
+          <v-list-item v-for="item in adminItems" :key="item.title" :to="item.link">
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </div>
+
     </v-navigation-drawer>
     <div data-app>
-      <router-view />
-</div>
+      <router-view v-if="rights != 0" />
+      <NotVerified v-else />
+    </div>
   </v-card>
 </template>
 
@@ -73,6 +74,7 @@
     getAuth,
     signOut
   } from "firebase/auth";
+  import NotVerified from "../components/NotVerified"
   export default {
     data() {
       return {
@@ -80,23 +82,23 @@
         patientItems: [{
             title: 'Medikamente',
             icon: 'mdi-office-building',
-            link: "/medikamente"
+            link: "/medikamente",
           },
           {
             title: 'Kalender',
             icon: 'mdi-office-building-outline',
-            link: "/kalender"
+            link: "/kalender",
           },
         ],
         docItems: [{
             title: 'Medikamente',
             icon: 'mdi-office-building',
-            link: "/medikamente"
+            link: "/medikamente",
           },
           {
             title: 'Kalender',
             icon: 'mdi-office-building-outline',
-            link: "/kalender"
+            link: "/kalender",
           },
         ],
         adminItems: [{
@@ -112,7 +114,14 @@
         ],
       }
     },
-    computed: {},
+    components: {
+      NotVerified,
+    },
+    computed: {
+      rights() {
+        return this.$store.getters.getRights
+      }
+    },
     methods: {
       logout() {
         const auth = getAuth();
