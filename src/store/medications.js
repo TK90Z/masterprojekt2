@@ -17,7 +17,7 @@ import {
     }) {
   
       const db = getFirestore();
-      const docSnap = await db.collection('Medikaments').get()
+      const docSnap = await db.collection('Medikamente').get()
   
   console.log("getting")
   
