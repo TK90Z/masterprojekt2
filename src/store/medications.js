@@ -17,17 +17,21 @@ import {
     }) {
   
       const db = getFirestore();
-      const docSnap = await db.collection('Medikaments').get()
+      const querySnapshot = await getDocs(collection(db, "Medikamente"));
   
   console.log("getting")
   
       if (docSnap.exists()) {
-        var data = snapshot.docs.map(doc => doc.data());
-        console.log("Document data:", data);
-        commit("setMeds", data);
+        var meds = []
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            meds.add(doc.data())
+          });
+        commit("setMeds", meds);
       } else {
         // doc.data() will be undefined in this case
-        console.log("No such document!");
+        console.log("No such collection!");
       }
     },
   }
