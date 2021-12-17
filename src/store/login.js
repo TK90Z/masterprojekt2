@@ -13,6 +13,7 @@ const mutations = {
     state.loggedIn = value;
   },
   SET_USER(state, data) {
+    console.log(data)
     state.data = data;
   },
   setRights(state, value) {
@@ -36,7 +37,7 @@ const actions = {
     console.log(state.loggedIn)
 
     const db = getFirestore();
-    const docRef = doc(db, "Rechte", user.uid);
+    const docRef = doc(db, "Nutzer", user.uid);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {

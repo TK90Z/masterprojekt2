@@ -3,11 +3,16 @@
         <v-tabs v-model="tab" background-color="transparent" centered dark icons-and-text>
             <v-tabs-slider></v-tabs-slider>
             <v-tab @click="tab = 0" class="home-custom-tab">
-                Eigene Termine
+                <div>Eigene Termine</div>
                 <!--<v-icon>mdi-phone</v-icon>-->
             </v-tab>
             <v-tab @click="tab = 1" class="home-custom-tab">
-                Termin buchen
+                <div>Termin buchen</div>
+                <!--<v-icon>mdi-heart</v-icon>-->
+            </v-tab>
+            <v-tab @click="tab = 2" class="home-custom-tab">
+                <v-badge v-if="unconfirmedEvents.length > 0" :content="unconfirmedEvents.length">Unbestaetigte Termine</v-badge>
+                <div v-else>Unbestaetigte Termine</div>
                 <!--<v-icon>mdi-heart</v-icon>-->
             </v-tab>
         </v-tabs>
@@ -30,6 +35,15 @@
                     </v-card>
                 </v-card>
             </v-tab-item>
+            <v-tab-item :key=2>
+                <v-card flat class="home-tab-outer-wrapper">
+                    <v-card flat>
+                        <div class="basic-config-wrapper">
+                            <UnbestaetigtKalender />
+                        </div>
+                    </v-card>
+                </v-card>
+            </v-tab-item>
         </v-tabs-items>
 
     </v-card>
@@ -41,6 +55,7 @@
 <script>
     import EigenerKalender from "./Kalender/EigenerKalender"
     import FremderKalender from "./Kalender/FremderKalender"
+    import UnbestaetigtKalender from "./Kalender/UnbestaetigtKalender"
     import NotAvailable from "../../components/NotAvailable"
     export default {
         data() {
@@ -48,6 +63,10 @@
                 tab: 0,
                 newLogo: false,
             }
+        },
+        created() {
+            this.$store.dispatch("fetchUnconfirmedEvents", {ownUid: this.$store.getters.getUID, targetUid: this.$store.getters.getUID});
+            this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
         },
         props: {
             value: Boolean,
@@ -57,10 +76,14 @@
             EigenerKalender,
             NotAvailable,
             FremderKalender,
+            UnbestaetigtKalender
         },
         computed: {
             rights() {
                 return this.$store.getters.getRights
+            },
+            unconfirmedEvents(){
+                return this.$store.getters.getOwnUnconfirmedEvents
             }
         },
     }

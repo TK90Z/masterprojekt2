@@ -1,6 +1,6 @@
 <template>
   <v-row class="fill-height">
-    <AddEvent :newEvent=newEvent :events=events v-model="addEventDialog" />
+    <AddEvent :newEvent=newEvent :events=events v-model="addEventDialog" @saved="save" />
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
@@ -49,49 +49,33 @@
       </v-sheet>
       <v-sheet height="600">
         <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :event-color="getEventColor"
-          :type="type" @click:event="showEvent" @click:more="viewDay" @click:time="addEvent" @click:day="addEvent" @click:date="viewDay" @change="updateRange">
+          :type="type" @click:event="showEvent" @click:more="viewDay" @click:time="addEvent" @click:day="addEvent"
+          @click:date="viewDay" @change="updateRange">
         </v-calendar>
         <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
           <v-card color="grey lighten-4" min-width="350px" flat>
             <v-toolbar :color="selectedEvent.color" dark>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-dialog
-        transition="dialog-top-transition"
-        max-width="600"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            v-on="on"
-            fab
-            plain
-          ><v-icon>mdi-delete</v-icon></v-btn>
-        </template>
-        <template v-slot:default="dialog">
-          <v-card>
-            <v-toolbar
-              color="primary"
-              dark
-            >Termin löschen</v-toolbar>
-            <v-card-text>
-              Wollen Sie diesen Termin wirklich löschen?
-            </v-card-text>
-            <v-card-actions class="justify-end">
-              <v-btn
-                text
-              >Löschen</v-btn>
-              <v-btn
-                text
-                @click="dialog.value = false"
-              >Abbrechen</v-btn>
-            </v-card-actions>
-          </v-card>
-        </template>
-      </v-dialog>
+              <v-dialog v-model="deleteDialog" transition="dialog-top-transition" max-width="600">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn v-bind="attrs" v-on="on" fab plain>
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </template>
+                <template>
+                  <v-card>
+                    <v-toolbar color="primary" dark>Termin löschen</v-toolbar>
+                    <v-card-text>
+                      Wollen Sie diesen Termin wirklich löschen?
+                    </v-card-text>
+                    <v-card-actions class="justify-end">
+                      <v-btn text>Löschen</v-btn>
+                      <v-btn text @click="deleteDialog = false">Abbrechen</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </template>
+              </v-dialog>
             </v-toolbar>
             <v-card-text>
               <span v-html="selectedEvent.details"></span>
@@ -109,13 +93,14 @@
 </template>
 
 <script>
-import AddEvent from './AddEvent.vue'
+  import AddEvent from './AddEvent.vue'
   export default {
     components: {
-        AddEvent
-      },
+      AddEvent
+    },
     data: () => ({
-      addEventDialog:false,
+      deleteDialog: false,
+      addEventDialog: false,
       focus: '',
       type: 'month',
       newEvent: {
@@ -134,10 +119,6 @@ import AddEvent from './AddEvent.vue'
     }),
     mounted() {
       this.$refs.calendar.checkChange()
-      this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
-    },
-    created() {
-      this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
     },
     computed: {
       events() {
@@ -145,7 +126,15 @@ import AddEvent from './AddEvent.vue'
       }
     },
     methods: {
-      addEvent(info){
+      save(newElement) {
+        var uid = this.$store.getters.getUID
+        console.log(uid)
+        this.$store.dispatch("createOwnEvents", {
+          newElement: newElement,
+          uid: uid
+        });
+      },
+      addEvent(info) {
         this.newEvent.date = JSON.parse(JSON.stringify(info.date))
         this.newEvent.time = JSON.parse(JSON.stringify(info.time))
         this.addEventDialog = true

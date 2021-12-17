@@ -14,7 +14,8 @@
                                         </v-text-field>
                                     </v-col>
                                     <v-col sm="12" md="12" lg="4" xl="4">
-                                        <v-text-field label="Farbe" :maxlength="7" :rules="[ hexRules ]" v-model="color" solo>
+                                        <v-text-field label="Farbe" :maxlength="7" :rules="[ hexRules ]" v-model="color"
+                                            solo>
                                             <template v-slot:append>
                                                 <v-menu v-model="menu" top nudge-bottom="105" nudge-left="16"
                                                     :close-on-content-click="false">
@@ -118,11 +119,14 @@
                 if (value) {
                     this.date = this.newEvent.date
                     this.start = this.newEvent.time
+                    this.name = ""
+                    this.details = ""
                     if (this.start == "") {
                         this.end = ""
                     } else {
                         var startParts = this.start.split(":")
-                        var endTime = parseInt(startParts[0]) < 10 ? "0" + (parseInt(startParts[0]) + 1).toString() + ":" + startParts[1] : (parseInt(startParts[0]) + 1).toString() + ":" + startParts[1]
+                        var endTime = parseInt(startParts[0]) < 10 ? "0" + (parseInt(startParts[0]) + 1).toString() +
+                            ":" + startParts[1] : (parseInt(startParts[0]) + 1).toString() + ":" + startParts[1]
                         this.end = endTime
                     }
                 }
@@ -131,6 +135,18 @@
         methods: {
             create() {
                 console.log("Abschicken")
+                var newElement = {
+                    color: this.color,
+                    details: this.details,
+                    end: this.date + " " + this.end,
+                    name: this.name,
+                    start: this.date + " " + this.start,
+                    creator: this.$store.getters.getUID,
+                    receiver: "",
+                    id: "",
+                }
+                this.$emit("saved", newElement)
+                this.show = false
             },
             dateRules(value) {
                 const pattern = /^\d{4}([-])\d{2}\1\d{2}$/
@@ -261,24 +277,28 @@
                 var newHappyHourD = new Date();
                 newHappyHourD.setHours(parseInt(newTime[0]), parseInt(newTime[1]), 0);
 
-                this.events.forEach(event => {
-                    var start = event.start.split(' ')
-                    var end = event.end.split(' ')
-                    if (parseInt(this.date) == parseInt(start[0])) {
-                        var startHappyHourD = new Date();
-                        var startTime = start[1].split(':')
-                        startHappyHourD.setHours(parseInt(startTime[0]), parseInt(startTime[1]), 0);
+                if (this.events) {
+                    this.events.forEach(event => {
+                        var start = event.start.split(' ')
+                        var end = event.end.split(' ')
+                        if (!event.noCollision) {
+                            if (this.date.toString() == start[0].toString()) {
+                                var startHappyHourD = new Date();
+                                var startTime = start[1].split(':')
+                                startHappyHourD.setHours(parseInt(startTime[0]), parseInt(startTime[1]), 0);
 
-                        var endHappyHourD = new Date();
-                        var endTime = end[1].split(':')
-                        endHappyHourD.setHours(parseInt(endTime[0]), parseInt(endTime[1]), 0);
+                                var endHappyHourD = new Date();
+                                var endTime = end[1].split(':')
+                                endHappyHourD.setHours(parseInt(endTime[0]), parseInt(endTime[1]), 0);
 
-                        if(newHappyHourD >= startHappyHourD && newHappyHourD <= endHappyHourD){
-                            collisionOccured = true
-                            return false
+                                if (newHappyHourD >= startHappyHourD && newHappyHourD <= endHappyHourD) {
+                                    collisionOccured = true
+                                    return false
+                                }
+                            }
                         }
-                    }
-                });
+                    });
+                }
                 return collisionOccured
             }
         },

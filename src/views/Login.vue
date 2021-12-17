@@ -76,7 +76,7 @@
     } from "firebase/auth";
     import {
         getFirestore,
-        doc, 
+        doc,
         setDoc
     } from "firebase/firestore";
 
@@ -114,12 +114,15 @@
                     .then(data => {
                         updateProfile(auth.currentUser, {
                             displayName: this.registerForm.name,
-                            rights: 0
                         }).then(() => {
                             try {
-                                setDoc(doc(db, "Rechte", data.user.uid), {
+                                const userRef = doc(db, "Nutzer", data.user.uid)
+                                setDoc(userRef, {
                                     rights: 0,
                                     name: this.registerForm.name,
+                                    uid: userRef.id
+                                }, {
+                                    merge: true
                                 });
                             } catch (e) {
                                 console.error("Error adding document: ", e);

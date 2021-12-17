@@ -1,9 +1,13 @@
-import { doc, getDoc, setDoc, getFirestore, } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  getFirestore,
+} from "firebase/firestore";
 const state = {
   events: []
 }
 const mutations = {
-  setForeignEvents(state, value){
+  setForeignEvents(state, value) {
     state.events = value;
   }
 }
@@ -11,26 +15,29 @@ const actions = {
   async fetchForeignEvents({
     commit
   }, uid) {
-
     const db = getFirestore();
-    const docRef = doc(db, "Kalender", uid);
+    const docRef = doc(db, "Nutzer", uid);
     const docSnap = await getDoc(docRef);
-
-console.log("getting")
 
     if (docSnap.exists()) {
       console.log("Document data:", docSnap.data().events);
-      commit("setForeignEvents", docSnap.data().events);
+      var events = []
+      if (docSnap.data().events) {
+        docSnap.data().events.forEach(async event => {
+          const eventRef = doc(db, "Termine", event);
+          const eventSnap = await getDoc(eventRef);
+          if (eventSnap.exists()) {
+            events.push(eventSnap.data())
+          }
+        });
+      }
+      commit("setForeignEvents", events);
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
+      commit("setForeignEvents", []);
     }
   },
-  async updateOwnEvents(events, user) {
-    const db = getFirestore();
-    const docRef = doc(db, "Kalender", user.data.uid);
-    setDoc(docRef, events, { merge: true });
-  }
 }
 const getters = {
   getForeignEvents(state) {
