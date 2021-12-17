@@ -71,7 +71,7 @@
                       Wollen Sie diesen Termin wirklich löschen?
                     </v-card-text>
                     <v-card-actions class="justify-end">
-                      <v-btn text>Löschen</v-btn>
+                      <v-btn text @click="deleteEvent">Löschen</v-btn>
                       <v-btn text @click="deleteDialog = false">Abbrechen</v-btn>
                     </v-card-actions>
                   </v-card>
@@ -138,6 +138,12 @@
       }
     },
     methods: {
+      deleteEvent() {
+        this.$store.dispatch("deleteEvent", this.selectedEvent);
+        this.$store.dispatch("fetchUnconfirmedEvents", {ownUid: this.$store.getters.getUID, targetUid:this.$store.getters.getUID});
+        this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
+        this.deleteDialog = false
+      },
       confirmeEvent(){
         console.log(this.selectedEvent)
         if(this.eventCollisionCheck(this.selectedEvent.start.split(" ")[1]) || this.eventCollisionCheck(this.selectedEvent.end.split(" ")[1])) {

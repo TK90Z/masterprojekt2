@@ -71,7 +71,7 @@
                       Wollen Sie diesen Termin wirklich löschen?
                     </v-card-text>
                     <v-card-actions class="justify-end">
-                      <v-btn text>Löschen</v-btn>
+                      <v-btn text @click="deleteEvent">Löschen</v-btn>
                       <v-btn text @click="deleteDialog = false">Abbrechen</v-btn>
                     </v-card-actions>
                   </v-card>
@@ -153,6 +153,12 @@ import AddEvent from './AddEvent.vue'
       }
     },
     methods: {
+      deleteEvent() {
+        this.$store.dispatch("deleteEvent", this.selectedEvent);
+        this.$store.dispatch("fetchForeignEvents", this.doctor);
+        this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
+        this.deleteDialog = false
+      },
       addEvent(info){
         if(this.doctor) {
           this.newEvent.date = JSON.parse(JSON.stringify(info.date))
