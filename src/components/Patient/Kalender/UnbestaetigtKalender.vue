@@ -142,6 +142,9 @@
         console.log(this.selectedEvent)
         if(this.eventCollisionCheck(this.selectedEvent.start.split(" ")[1]) || this.eventCollisionCheck(this.selectedEvent.end.split(" ")[1])) {
           alert('Sie haben zu dieser Zeit schon einen Termin!');
+        } else {
+          console.log("All good")
+          this.$store.dispatch("confirmUnconfirmedEvents", {confirmedEvent: this.selectedEvent, uids: {ownUid: this.$store.getters.getUID, targetUid: this.$store.getters.getUID}});
         }
       },
       eventCollisionCheck(value) {

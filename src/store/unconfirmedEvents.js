@@ -6,7 +6,8 @@ import {
   arrayUnion,
   updateDoc,
   collection,
-  setDoc
+  setDoc,
+  arrayRemove
 } from "firebase/firestore";
 const state = {
   ownEvents: [],
@@ -59,9 +60,11 @@ const actions = {
     dispatch
   }, event) {
     const db = getFirestore();
+    event.newElement.receiver = event.uids.targetUid
     const eventRef = await addDoc(collection(db, "Termine"), event.newElement);
-    event.newElement.receiver = event.uid
-    event.newElement.id = eventRef.id
+    await updateDoc(eventRef, {
+      id: eventRef.id
+    });
     const calRef = doc(db, "Nutzer", event.uids.targetUid);
     const calSnap = await getDoc(calRef);
     if (calSnap.exists()) {
@@ -76,6 +79,56 @@ const actions = {
         merge: true
       });
     }
+    dispatch('fetchUnconfirmedEvents', event.uids);
+  },
+
+  async confirmUnconfirmedEvents({
+    dispatch, getters
+  }, event) {
+    console.log("Lets go")
+    const db = getFirestore();
+    const receiverRef = doc(db, "Nutzer", event.confirmedEvent.receiver);
+    const receiverSnap = await getDoc(receiverRef);
+    if (receiverSnap.exists()) {
+      await updateDoc(receiverRef, {
+        events: arrayUnion(event.confirmedEvent.id)
+      });
+      await updateDoc(receiverRef, {
+        unconfirmedEvents: arrayRemove(event.confirmedEvent.id)
+      });
+    } else {
+      var eventsObj = {
+        events: new Array(event.confirmedEvent.id)
+      }
+      await setDoc(receiverRef, eventsObj, {
+        merge: true
+      });
+      await updateDoc(receiverRef, {
+        unconfirmedEvents: arrayRemove(event.confirmedEvent.id)
+      });
+    }
+    const creatorRef = doc(db, "Nutzer", event.confirmedEvent.creator);
+    const creatorSnap = await getDoc(creatorRef);
+    if (creatorSnap.exists()) {
+      await updateDoc(creatorRef, {
+        events: arrayUnion(event.confirmedEvent.id)
+      });
+      await updateDoc(creatorRef, {
+        unconfirmedEvents: arrayRemove(event.confirmedEvent.id)
+      });
+    } else {
+      eventsObj = {
+        events: new Array(event.confirmedEvent.id)
+      }
+      await setDoc(creatorRef, eventsObj, {
+        merge: true
+      });
+      await updateDoc(creatorRef, {
+        unconfirmedEvents: arrayRemove(event.confirmedEvent.id)
+      });
+    }
+    console.log("I did it")
+    dispatch('fetchOwnEvents', getters.getUID);
     dispatch('fetchUnconfirmedEvents', event.uids);
   }
 }

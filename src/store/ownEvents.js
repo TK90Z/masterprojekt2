@@ -47,9 +47,11 @@ const actions = {
     dispatch
   }, event) {
     const db = getFirestore();
-    const eventRef = await addDoc(collection(db, "Termine"), event.newElement);
     event.newElement.receiver = event.uid
-    event.newElement.id = eventRef.id
+    const eventRef = await addDoc(collection(db, "Termine"), event.newElement);
+    await updateDoc(eventRef, {
+      id: eventRef.id
+    });
     const calRef = doc(db, "Nutzer", event.uid);
     const calSnap = await getDoc(calRef);
     if (calSnap.exists()) {
