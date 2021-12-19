@@ -4,16 +4,16 @@
             <v-tabs-slider></v-tabs-slider>
             <v-tab @click="tab = 0" class="home-custom-tab">
                 <div>Eigene Termine</div>
-                <!--<v-icon>mdi-phone</v-icon>-->
+                <v-icon>mdi-calendar</v-icon>
             </v-tab>
             <v-tab @click="tab = 1" class="home-custom-tab">
                 <div>Termin buchen</div>
-                <!--<v-icon>mdi-heart</v-icon>-->
+                <v-icon>mdi-calendar-edit</v-icon>
             </v-tab>
             <v-tab @click="tab = 2" class="home-custom-tab">
                 <v-badge v-if="unconfirmedEvents.length > 0" :content="unconfirmedEvents.length">Unbestaetigte Termine</v-badge>
                 <div v-else>Unbestaetigte Termine</div>
-                <!--<v-icon>mdi-heart</v-icon>-->
+                <v-icon>mdi-calendar-question</v-icon>
             </v-tab>
         </v-tabs>
 
