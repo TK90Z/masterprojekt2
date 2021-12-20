@@ -1,19 +1,18 @@
 <template>
-    <v-card v-if="rights == 1 || rights == 4">
+    <v-card v-if="rights == 2 || rights == 4" >
         <v-tabs v-model="tab" background-color="transparent" centered icons-and-text>
             <v-tabs-slider></v-tabs-slider>
             <v-tab @click="tab = 0" class="home-custom-tab">
-                <div>Eigene Termine</div>
-                <v-icon>mdi-calendar</v-icon>
+                <div>
+                    <v-icon left>mdi-calendar-edit</v-icon>
+                    Terminliste
+                </div>                
             </v-tab>
             <v-tab @click="tab = 1" class="home-custom-tab">
-                <div>Termin buchen</div>
-                <v-icon>mdi-calendar-edit</v-icon>
-            </v-tab>
-            <v-tab @click="tab = 2" class="home-custom-tab">
-                <v-badge v-if="unconfirmedEvents.length > 0" :content="unconfirmedEvents.length">Unbestaetigte Termine</v-badge>
-                <div v-else>Unbestaetigte Termine</div>
-                <v-icon>mdi-calendar-question</v-icon>
+                <div>
+                    <v-icon left>mdi-calendar-check</v-icon>
+                    Termine bestaetigen
+                </div>                
             </v-tab>
         </v-tabs>
 
@@ -23,7 +22,7 @@
                 <v-card flat class="home-tab-outer-wrapper">
                     <v-card flat>
                         <div class="basic-config-wrapper">
-                            <EigenerKalender />
+                            <TerminKalender />
                         </div>
                     </v-card>
                 </v-card>
@@ -31,16 +30,7 @@
             <v-tab-item :key=1>
                 <v-card flat class="home-tab-outer-wrapper">
                     <v-card flat>
-                        <FremderKalender />
-                    </v-card>
-                </v-card>
-            </v-tab-item>
-            <v-tab-item :key=2>
-                <v-card flat class="home-tab-outer-wrapper">
-                    <v-card flat>
-                        <div class="basic-config-wrapper">
-                            <UnbestaetigtKalender />
-                        </div>
+                        <BestaetigungKalender />
                     </v-card>
                 </v-card>
             </v-tab-item>
@@ -53,9 +43,8 @@
 
 
 <script>
-    import EigenerKalender from "./Kalender/EigenerKalender"
-    import FremderKalender from "./Kalender/FremderKalender"
-    import UnbestaetigtKalender from "./Kalender/UnbestaetigtKalender"
+    import BestaetigungKalender from "./Kalender/BestaetigungKalender"
+    import TerminKalender from "./Kalender/TerminKalender"
     import NotAvailable from "../../components/NotAvailable"
     export default {
         data() {
@@ -73,10 +62,9 @@
             editItem: null,
         },
         components: {
-            EigenerKalender,
+            BestaetigungKalender,
             NotAvailable,
-            FremderKalender,
-            UnbestaetigtKalender
+            TerminKalender
         },
         computed: {
             rights() {

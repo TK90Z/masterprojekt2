@@ -5,6 +5,10 @@ import ownEvents from './ownEvents'
 import foreignEvents from './foreignEvents'
 import patients from './patients'
 import doctors from './doctors'
+import unconfirmedEvents from './unconfirmedEvents'
+import universalDelete from './universalDelete'
+import users from './users'
+
 
 Vue.use(Vuex)
 
@@ -20,6 +24,9 @@ export default new Vuex.Store({
     ownEvents,
     foreignEvents,
     patients,
-    doctors
+    doctors,
+    unconfirmedEvents,
+    universalDelete,
+    users
   }
 })

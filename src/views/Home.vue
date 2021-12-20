@@ -81,35 +81,30 @@
         drawer: null,
         patientItems: [{
             title: 'Medikamente',
-            icon: 'mdi-office-building',
-            link: "/medikamente",
-          },
-          {
-            title: 'Kalender',
-            icon: 'mdi-office-building-outline',
-            link: "/kalender",
-          },
-        ],
-        docItems: [{
-            title: 'Medikamente',
-            icon: 'mdi-office-building',
-            link: "/medikamente",
-          },
-          {
-            title: 'Kalender',
-            icon: 'mdi-office-building-outline',
-            link: "/kalender",
-          },
-        ],
-        adminItems: [{
-            title: 'Medikamente',
             icon: 'mdi-pill',
-            link: "/medikamente"
+            link: "/patient/medikamente",
           },
           {
             title: 'Kalender',
             icon: 'mdi-calendar',
-            link: "/kalender"
+            link: "/patient/kalender",
+          },
+        ],
+        docItems: [{
+            title: 'Medikamente',
+            icon: 'mdi-pill',
+            link: "/arzt/medikamente",
+          },
+          {
+            title: 'Kalender',
+            icon: 'mdi-calendar',
+            link: "/arzt/kalender",
+          },
+        ],
+        adminItems: [{
+            title: 'Nutzer Verwaltung',
+            icon: 'mdi-pill',
+            link: "/admin/userConfig"
           },
         ],
       }

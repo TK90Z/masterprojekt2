@@ -20,14 +20,25 @@ import {
       const docRef = doc(db, "Typen", "qiL18SAnqonCvvcL17s8");
       const docSnap = await getDoc(docRef);
   
-  console.log("getting")
+      console.log("getting")
   
       if (docSnap.exists()) {
         console.log("Document data:", docSnap.data().patients);
-        commit("setPatients", docSnap.data().patients);
+        var patients = []
+        if (docSnap.data().patients) {
+          docSnap.data().patients.forEach(async patient => {
+            const patientRef = doc(db, "Nutzer", patient);
+            const patientSnap = await getDoc(patientRef);
+            if (patientSnap.exists()) {
+              patients.push(patientSnap.data())
+            }
+          });
+        }
+        commit("setPatients", patients);
       } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
+        commit("setPatients", []);
       }
     },
   }
