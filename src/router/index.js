@@ -4,6 +4,7 @@ import Medikamente from '../components/Patient/Medikamente'
 import TabKalender from '../components/Patient/TabKalender'
 import ArztMedikamente from '../components/Arzt/ArztMedikamente'
 import ArztTabKalender from '../components/Arzt/ArztTabKalender'
+import NutzerVerwaltung from '../components/Admin/NutzerVerwaltung'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
   path: '/arzt/kalender',
   name: 'Kalender',
   component: ArztTabKalender
+},
+{
+  path: '/admin/userConfig',
+  name: 'Nutzer Verwaltung',
+  component: NutzerVerwaltung
 },
 ]
 

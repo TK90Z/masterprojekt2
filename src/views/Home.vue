@@ -102,14 +102,9 @@
           },
         ],
         adminItems: [{
-            title: 'Medikamente',
+            title: 'Nutzer Verwaltung',
             icon: 'mdi-pill',
-            link: "/medikamente"
-          },
-          {
-            title: 'Kalender',
-            icon: 'mdi-calendar',
-            link: "/kalender"
+            link: "/admin/userConfig"
           },
         ],
       }

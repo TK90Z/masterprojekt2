@@ -51,7 +51,8 @@
       </v-sheet>
       <v-sheet height="600">
         <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :event-color="getEventColor"
-          :type="type" @click:event="showEvent" @click:more="viewDay" @click:date="viewDay" @click:time="addEvent" @click:day="addEvent" @change="updateRange">
+          :type="type" @click:event="showEvent" @click:more="viewDay" @click:date="viewDay" @click:time="addEvent"
+          @click:day="addEvent" @change="updateRange">
         </v-calendar>
         <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
           <v-card color="grey lighten-4" min-width="350px" flat>
@@ -60,7 +61,8 @@
               <v-spacer></v-spacer>
               <v-dialog v-model="deleteDialog" transition="dialog-top-transition" max-width="600">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn v-bind="attrs" v-on="on" fab plain>
+                  <v-btn v-bind="attrs" v-on="on" fab plain
+                    v-if="selectedEvent.creator == uid || selectedEvent.receiver == uid">
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </template>
@@ -94,14 +96,14 @@
 </template>
 
 <script>
-import AddEvent from './AddEvent.vue'
+  import AddEvent from './AddEvent.vue'
   export default {
     components: {
-        AddEvent
-      },
+      AddEvent
+    },
     data: () => ({
       deleteDialog: false,
-      addEventDialog:false,
+      addEventDialog: false,
       doctor: null,
       events: [],
       newEvent: {
@@ -154,24 +156,32 @@ import AddEvent from './AddEvent.vue'
     },
     methods: {
       deleteEvent() {
-        this.$store.dispatch("deleteEvent", this.selectedEvent);
-        this.$store.dispatch("fetchForeignEvents", this.doctor);
-        this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
-        this.deleteDialog = false
+        if (this.selectedEvent.creator == this.uid || this.selectedEvent.receiver == this.uid) {
+          this.$store.dispatch("deleteEvent", this.selectedEvent);
+          this.$store.dispatch("fetchForeignEvents", this.doctor);
+          this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
+          this.deleteDialog = false
+        }
       },
-      addEvent(info){
-        if(this.doctor) {
+      addEvent(info) {
+        if (this.doctor) {
           this.newEvent.date = JSON.parse(JSON.stringify(info.date))
-        this.newEvent.time = JSON.parse(JSON.stringify(info.time))
-        this.addEventDialog = true
+          this.newEvent.time = JSON.parse(JSON.stringify(info.time))
+          this.addEventDialog = true
         } else {
           alert('Bitte wählen Sie zuerst einen Doktor aus!');
         }
       },
-      save(newElement){
+      save(newElement) {
         var uid = this.doctor
         console.log(uid)
-        this.$store.dispatch("createUnconfirmedEvents", {newElement: newElement, uids: {ownUid: this.$store.getters.getUID, targetUid: uid}});
+        this.$store.dispatch("createUnconfirmedEvents", {
+          newElement: newElement,
+          uids: {
+            ownUid: this.$store.getters.getUID,
+            targetUid: uid
+          }
+        });
       },
       updateCalendar() {
         this.$store.dispatch("fetchForeignEvents", this.doctor);
@@ -213,21 +223,21 @@ import AddEvent from './AddEvent.vue'
         nativeEvent,
         event
       }) {
-        if(event.receiver == this.uid || event.creator == this.uid){
+        if (event.receiver == this.uid || event.creator == this.uid) {
           const open = () => {
-          this.selectedEvent = event
-          this.selectedElement = nativeEvent.target
-          requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
-        }
+            this.selectedEvent = event
+            this.selectedElement = nativeEvent.target
+            requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
+          }
 
-        if (this.selectedOpen) {
-          this.selectedOpen = false
-          requestAnimationFrame(() => requestAnimationFrame(() => open()))
-        } else {
-          open()
-        }
+          if (this.selectedOpen) {
+            this.selectedOpen = false
+            requestAnimationFrame(() => requestAnimationFrame(() => open()))
+          } else {
+            open()
+          }
 
-        nativeEvent.stopPropagation()
+          nativeEvent.stopPropagation()
         }
       },
       updateRange() {

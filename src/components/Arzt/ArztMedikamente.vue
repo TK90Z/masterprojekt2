@@ -1,5 +1,5 @@
 <template>
-  <p v-if="rights == 1 || rights == 4">Meds</p>
+  <p v-if="rights == 2 || rights == 4">Meds</p>
   <NotAvailable v-else />
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="rights == 1 || rights == 4" >
+    <v-card v-if="rights == 2 || rights == 4" >
         <v-tabs v-model="tab" background-color="transparent" centered icons-and-text>
             <v-tabs-slider></v-tabs-slider>
             <v-tab @click="tab = 0" class="home-custom-tab">
