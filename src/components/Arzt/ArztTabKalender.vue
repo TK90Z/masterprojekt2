@@ -4,14 +4,20 @@
             <v-tabs-slider></v-tabs-slider>
             <v-tab @click="tab = 0" class="home-custom-tab">
                 <div>
-                    <v-icon left>mdi-calendar-edit</v-icon>
-                    Terminliste
+                    <v-icon left>mdi-calendar</v-icon>
+                    Meine Termine
                 </div>                
             </v-tab>
             <v-tab @click="tab = 1" class="home-custom-tab">
                 <div>
-                    <v-icon left>mdi-calendar-check</v-icon>
-                    Termine bestaetigen
+                    <v-icon left>mdi-calendar-edit</v-icon>
+                    Termin buchen
+                </div>                
+            </v-tab>
+            <v-tab @click="tab = 2" class="home-custom-tab">
+                <div>
+                    <v-icon left>mdi-calendar-question</v-icon>
+                    unbestaetigte Termine
                 </div>                
             </v-tab>
         </v-tabs>
@@ -22,12 +28,19 @@
                 <v-card flat class="home-tab-outer-wrapper">
                     <v-card flat>
                         <div class="basic-config-wrapper">
-                            <TerminKalender />
+                            <EigenerKalender />
                         </div>
                     </v-card>
                 </v-card>
             </v-tab-item>
             <v-tab-item :key=1>
+                <v-card flat class="home-tab-outer-wrapper">
+                    <v-card flat>
+                        <TerminKalender />
+                    </v-card>
+                </v-card>
+            </v-tab-item>
+            <v-tab-item :key=2>
                 <v-card flat class="home-tab-outer-wrapper">
                     <v-card flat>
                         <BestaetigungKalender />
@@ -44,6 +57,7 @@
 
 <script>
     import BestaetigungKalender from "./Kalender/BestaetigungKalender"
+    import EigenerKalender from "./Kalender/EigenerKalender.vue"    
     import TerminKalender from "./Kalender/TerminKalender"
     import NotAvailable from "../../components/NotAvailable"
     export default {
@@ -63,6 +77,7 @@
         },
         components: {
             BestaetigungKalender,
+            EigenerKalender,
             NotAvailable,
             TerminKalender
         },
