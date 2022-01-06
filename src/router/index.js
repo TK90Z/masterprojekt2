@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Medikamente from '../components/Patient/Medikamente'
-import TabKalender from '../components/Patient/TabKalender'
+import PatientMedikamente from '../components/Patient/PatientMedikamente'
+import PatientTabKalender from '../components/Patient/PatientTabKalender'
 import ArztMedikamente from '../components/Arzt/ArztMedikamente'
 import ArztTabKalender from '../components/Arzt/ArztTabKalender'
 import NutzerVerwaltung from '../components/Admin/NutzerVerwaltung'
@@ -12,12 +12,12 @@ const routes = [
 {
   path: '/patient/medikamente',
   name: 'Medikamente',
-  component: Medikamente
+  component: PatientMedikamente
 },
 {
   path: '/patient/kalender',
   name: 'Kalender',
-  component: TabKalender
+  component: PatientTabKalender
 },
 {
   path: '/arzt/medikamente',
