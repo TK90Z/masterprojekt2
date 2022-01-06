@@ -4,7 +4,7 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
-          <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
+          <v-btn outlined class="mr-4 buttons" color="grey darken-2" @click="setToday">
             Heute
           </v-btn>
           <v-btn fab text small color="grey darken-2" @click="prev">
@@ -12,7 +12,7 @@
               mdi-chevron-left
             </v-icon>
           </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="next">
+          <v-btn fab text small color="green" hover="blue" @click="next">
             <v-icon small>
               mdi-chevron-right
             </v-icon>
@@ -31,10 +31,10 @@
               </v-btn>
             </template>
             <v-list>
-              <v-list-item @click="type = 'day'">
+              <v-list-item class="buttons" @click="type = 'day'">
                 <v-list-item-title>Tag</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="type = 'week'">
+              <v-list-item id="hund" @click="type = 'week'">
                 <v-list-item-title>Woche</v-list-item-title>
               </v-list-item>
               <v-list-item @click="type = 'month'">
@@ -191,3 +191,25 @@
     },
   }
 </script>
+
+<style>
+  .buttons:hover {
+    color: rgb(255, 60, 0) !important;
+  }
+
+  .buttons {
+    color: green !important;
+  }
+
+  #hund {
+    color: yellow;
+  }
+
+  v-list-item {
+    text-shadow: blueviolet;
+  }
+</style>
+
+
+.i.was Klassen
+#i.was ein Element
