@@ -2,19 +2,35 @@
     <v-card v-if="rights == 1 || rights == 4">
         <v-tabs v-model="tab" background-color="transparent" centered icons-and-text>
             <v-tabs-slider></v-tabs-slider>
-            <v-tab @click="tab = 0" class="home-custom-tab">
-                <div>Eigene Termine</div>
-                <v-icon>mdi-calendar</v-icon>
-            </v-tab>
-            <v-tab @click="tab = 1" class="home-custom-tab">
-                <div>Termin buchen</div>
+            <v-tooltip bottom>
+                <span>Tooltip </span>
+                <template v-slot:activator="{ on }">
+                    <v-tab ripple v-on="on" @click="tab = 0" class="home-custom-tab" style="margin-left: auto;">
+                        <div>Eigene Termine</div>
+                        <v-icon>mdi-calendar</v-icon>
+                    </v-tab>
+                </template>
+            </v-tooltip>
+            <v-tooltip bottom>
+                <span>Tooltip </span>
+                <template v-slot:activator="{ on }">
+                    <v-tab ripple v-on="on" @click="tab = 1" class="home-custom-tab">
+                        <div>Termin buchen</div>
                 <v-icon>mdi-calendar-edit</v-icon>
-            </v-tab>
-            <v-tab @click="tab = 2" class="home-custom-tab">
-                <v-badge v-if="unconfirmedEvents.length > 0" :content="unconfirmedEvents.length">Unbestaetigte Termine</v-badge>
+                    </v-tab>
+                </template>
+            </v-tooltip>
+            <v-tooltip bottom>
+                <span>Tooltip </span>
+                <template v-slot:activator="{ on }">
+                    <v-tab ripple v-on="on" @click="tab = 2" class="home-custom-tab" style="margin-right: auto;">
+                        <v-badge v-if="unconfirmedEvents.length > 0" :content="unconfirmedEvents.length">Unbestaetigte Termine
+                </v-badge>
                 <div v-else>Unbestaetigte Termine</div>
                 <v-icon>mdi-calendar-question</v-icon>
-            </v-tab>
+                    </v-tab>
+                </template>
+            </v-tooltip>
         </v-tabs>
 
         <div class="tab-item-spacer"></div>
@@ -65,7 +81,10 @@
             }
         },
         created() {
-            this.$store.dispatch("fetchUnconfirmedEvents", {ownUid: this.$store.getters.getUID, targetUid: this.$store.getters.getUID});
+            this.$store.dispatch("fetchUnconfirmedEvents", {
+                ownUid: this.$store.getters.getUID,
+                targetUid: this.$store.getters.getUID
+            });
             this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
         },
         props: {
@@ -82,7 +101,7 @@
             rights() {
                 return this.$store.getters.getRights
             },
-            unconfirmedEvents(){
+            unconfirmedEvents() {
                 return this.$store.getters.getOwnUnconfirmedEvents
             }
         },
