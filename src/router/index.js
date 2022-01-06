@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import PatientMedikamente from '../components/Patient/PatientMedikamente'
-import PatientTabKalender from '../components/Patient/PatientTabKalender'
-import ArztMedikamente from '../components/Arzt/ArztMedikamente'
-import ArztTabKalender from '../components/Arzt/ArztTabKalender'
+import PatientMedikamente from '../components/Patient/Medikamente'
+import PatientTabKalender from '../components/Patient/TabKalender'
+import ArztMedikamente from '../components/Arzt/Medikamente'
+import ArztTabKalender from '../components/Arzt/TabKalender'
 import NutzerVerwaltung from '../components/Admin/NutzerVerwaltung'
 
 Vue.use(VueRouter)

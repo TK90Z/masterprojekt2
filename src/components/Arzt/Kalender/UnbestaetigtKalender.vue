@@ -1,6 +1,5 @@
 <template>
   <v-row class="fill-height">
-    <AddEvent :newEvent=newEvent :events=events v-model="addEventDialog" @saved="save" />
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
@@ -49,14 +48,16 @@
       </v-sheet>
       <v-sheet height="600">
         <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :event-color="getEventColor"
-          :type="type" @click:event="showEvent" @click:more="viewDay" @click:time="addEvent" @click:day="addEvent"
-          @click:date="viewDay" @change="updateRange">
+          :type="type" @click:event="showEvent" @click:more="viewDay" @click:date="viewDay" @change="updateRange">
         </v-calendar>
         <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
           <v-card color="grey lighten-4" min-width="350px" flat>
             <v-toolbar :color="selectedEvent.color" dark>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
+              <v-btn icon @click="confirmeEvent" v-if="selectedEvent.creator.toString() != uid">
+                <v-icon>mdi-check-bold</v-icon>
+              </v-btn>
               <v-dialog v-model="deleteDialog" transition="dialog-top-transition" max-width="600">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn v-bind="attrs" v-on="on" fab plain>
@@ -93,27 +94,21 @@
 </template>
 
 <script>
-  import AddEvent from './AddEvent.vue'
   export default {
-    components: {
-      AddEvent
-    },
     data: () => ({
       deleteDialog: false,
-      addEventDialog: false,
       focus: '',
+      events: [],
       type: 'month',
-      newEvent: {
-        date: String,
-        time: String,
-      },
       typeToLabel: {
         month: 'Monat',
         week: 'Woche',
         day: 'Tag',
         '4day': '4 Tage',
       },
-      selectedEvent: {},
+      selectedEvent: {
+        creator:""
+      },
       selectedElement: null,
       selectedOpen: false,
     }),
@@ -121,28 +116,86 @@
       this.$refs.calendar.checkChange()
     },
     computed: {
-      events() {
+      uid() {
+        return this.$store.getters.getUID
+      },
+      unconfirmedEvents() {
+        return this.$store.getters.getOwnUnconfirmedEvents
+      },
+      ownEvents() {
         return this.$store.getters.getOwnEvents
+      }
+    },
+    watch: {
+      uid() {
+        this.updateCalendar()
+      },
+      unconfirmedEvents() {
+        this.updateEvents()
+      },
+      ownEvents() {
+        this.updateEvents()
       }
     },
     methods: {
       deleteEvent() {
         this.$store.dispatch("deleteEvent", this.selectedEvent);
+        this.$store.dispatch("fetchUnconfirmedEvents", {ownUid: this.$store.getters.getUID, targetUid:this.$store.getters.getUID});
         this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
         this.deleteDialog = false
       },
-      save(newElement) {
-        var uid = this.$store.getters.getUID
-        console.log(uid)
-        this.$store.dispatch("createOwnEvents", {
-          newElement: newElement,
-          uid: uid
-        });
+      confirmeEvent(){
+        console.log(this.selectedEvent)
+        if(this.eventCollisionCheck(this.selectedEvent.start.split(" ")[1]) || this.eventCollisionCheck(this.selectedEvent.end.split(" ")[1])) {
+          alert('Sie haben zu dieser Zeit schon einen Termin!');
+        } else {
+          console.log("All good")
+          this.$store.dispatch("confirmUnconfirmedEvents", {confirmedEvent: this.selectedEvent, uids: {ownUid: this.$store.getters.getUID, targetUid: this.$store.getters.getUID}});
+        }
       },
-      addEvent(info) {
-        this.newEvent.date = JSON.parse(JSON.stringify(info.date))
-        this.newEvent.time = JSON.parse(JSON.stringify(info.time))
-        this.addEventDialog = true
+      eventCollisionCheck(value) {
+        console.log(value)
+        var collisionOccured = false
+        var newTime = value.split(':')
+        var newHappyHourD = new Date();
+        newHappyHourD.setHours(parseInt(newTime[0]), parseInt(newTime[1]), 0);
+
+        this.ownEvents.forEach(event => {
+          var start = event.start.split(' ')
+          var end = event.end.split(' ')
+          if (!event.noCollision) {
+            if (this.selectedEvent.start.split(" ")[0].toString() == start[0].toString()) {
+              var startHappyHourD = new Date();
+              var startTime = start[1].split(':')
+              startHappyHourD.setHours(parseInt(startTime[0]), parseInt(startTime[1]), 0);
+
+              var endHappyHourD = new Date();
+              var endTime = end[1].split(':')
+              endHappyHourD.setHours(parseInt(endTime[0]), parseInt(endTime[1]), 0);
+
+              if (newHappyHourD >= startHappyHourD && newHappyHourD <= endHappyHourD) {
+                collisionOccured = true
+                return false
+              }
+            }
+          }
+        });
+        return collisionOccured
+      },
+      updateCalendar() {
+        this.$store.dispatch("fetchUnconfirmedEvents", {ownUid: this.$store.getters.getUID, targetUid: this.$store.getters.getUID});
+        this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
+      },
+      updateEvents() {
+        var ownEvents = JSON.parse(JSON.stringify(this.$store.getters.getOwnEvents))
+        var unconfirmedEvents = JSON.parse(JSON.stringify(this.$store.getters.getOwnUnconfirmedEvents))
+        ownEvents.forEach(element => {
+          element.color = "#00ff00"
+        });
+        unconfirmedEvents.forEach(element => {
+          element.color = "#ff0000"
+        });
+        this.events = ownEvents.concat(unconfirmedEvents)
       },
       viewDay({
         date
@@ -166,9 +219,9 @@
         nativeEvent,
         event
       }) {
-        const open = () => {
+        console.log(event.creator.toString())
+          const open = () => {
           this.selectedEvent = event
-          console.log(event)
           this.selectedElement = nativeEvent.target
           requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
         }
@@ -183,7 +236,7 @@
         nativeEvent.stopPropagation()
       },
       updateRange() {
-        this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
+        this.$store.dispatch("fetchUnconfirmedEvents", {ownUid: this.$store.getters.getUID, targetUid: this.$store.getters.getUID});
       },
       rnd(a, b) {
         return Math.floor((b - a + 1) * Math.random()) + a

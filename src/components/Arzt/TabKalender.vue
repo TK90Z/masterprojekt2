@@ -36,14 +36,14 @@
             <v-tab-item :key=1>
                 <v-card flat class="home-tab-outer-wrapper">
                     <v-card flat>
-                        <TerminKalender />
+                        <BuchungKalender />
                     </v-card>
                 </v-card>
             </v-tab-item>
             <v-tab-item :key=2>
                 <v-card flat class="home-tab-outer-wrapper">
                     <v-card flat>
-                        <BestaetigungKalender />
+                        <UnbestaetigtKalender />
                     </v-card>
                 </v-card>
             </v-tab-item>
@@ -56,9 +56,9 @@
 
 
 <script>
-    import BestaetigungKalender from "./Kalender/BestaetigungKalender"
+    import UnbestaetigtKalender from "./Kalender/UnbestaetigtKalender"
     import EigenerKalender from "./Kalender/EigenerKalender.vue"    
-    import TerminKalender from "./Kalender/TerminKalender"
+    import BuchungKalender from "./Kalender/BuchungKalender"
     import NotAvailable from "../../components/NotAvailable"
     export default {
         data() {
@@ -76,10 +76,10 @@
             editItem: null,
         },
         components: {
-            BestaetigungKalender,
+            UnbestaetigtKalender,
             EigenerKalender,
             NotAvailable,
-            TerminKalender
+            BuchungKalender
         },
         computed: {
             rights() {

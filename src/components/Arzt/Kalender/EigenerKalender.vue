@@ -211,5 +211,6 @@
 </style>
 
 
-.i.was Klassen
-#i.was ein Element
+.i.was Klassen -> class="i.was"
+#i.was ein Element -> id="i.was"
+!important überschreibt js

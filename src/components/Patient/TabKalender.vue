@@ -47,7 +47,7 @@
             <v-tab-item :key=1>
                 <v-card flat class="home-tab-outer-wrapper">
                     <v-card flat>
-                        <FremderKalender />
+                        <BuchungKalender />
                     </v-card>
                 </v-card>
             </v-tab-item>
@@ -70,7 +70,7 @@
 
 <script>
     import EigenerKalender from "./Kalender/EigenerKalender"
-    import FremderKalender from "./Kalender/FremderKalender"
+    import BuchungKalender from "./Kalender/BuchungKalender"
     import UnbestaetigtKalender from "./Kalender/UnbestaetigtKalender"
     import NotAvailable from "../../components/NotAvailable"
     export default {
@@ -94,7 +94,7 @@
         components: {
             EigenerKalender,
             NotAvailable,
-            FremderKalender,
+            BuchungKalender,
             UnbestaetigtKalender
         },
         computed: {
