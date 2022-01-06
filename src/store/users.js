@@ -3,7 +3,9 @@ import {
     getDocs,
     getFirestore,
     updateDoc,
-    doc
+    doc,
+    arrayUnion,
+    arrayRemove
 } from "firebase/firestore";
 const state = {
     users: []
@@ -41,6 +43,24 @@ const actions = {
             rights: user.rights
         });
         dispatch("fetchUsers")
+        const patientRef = doc(db, "Typen", "qiL18SAnqonCvvcL17s8");
+        await updateDoc(patientRef, {
+            patients: arrayRemove(user.uid),
+        });
+        const doctorRef = doc(db, "Typen", "l0vUmzsNeMYKENhMx49w");
+        await updateDoc(doctorRef, {
+            doctors: arrayRemove(user.uid),
+        });
+        if(user.rights == 1) {
+            await updateDoc(patientRef, {
+                patients: arrayUnion(user.uid)
+            });
+        }
+        if(user.rights == 2) {
+            await updateDoc(doctorRef, {
+                doctors: arrayUnion(user.uid)
+            });
+        }
     },
 }
 const getters = {

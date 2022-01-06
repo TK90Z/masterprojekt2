@@ -4,7 +4,7 @@ import {
     getFirestore,
   } from "firebase/firestore";
   const state = {
-    patients: false,
+    patients: [],
   }
   const mutations = {
     setPatients(state, value){

@@ -128,6 +128,7 @@
     },
     computed: {
       patients() {
+        console.log(this.$store.getters.getPatients)
         return this.$store.getters.getPatients
       },
       uid() {
