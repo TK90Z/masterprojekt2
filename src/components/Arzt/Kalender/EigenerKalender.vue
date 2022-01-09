@@ -52,17 +52,17 @@
                 <span>Ansicht ändern </span>
               </v-tooltip>
             </template>
-            <v-list ripple v-bind="attrs" v-on="on" class="home-custom-tab">
-              <v-list-item class="menu-buttons" @click="type = 'day'">
+            <v-list ripple v-bind:class="active">
+              <v-list-item class="menu-buttons day" v-on:click="makeActive('day')" @click="type = 'day'">
                 <v-list-item-title>Tag</v-list-item-title>
               </v-list-item>
-              <v-list-item class="menu-buttons" @click="type = 'week'">
+              <v-list-item class="menu-buttons week" v-on:click="makeActive('week')" @click="type = 'week'">
                 <v-list-item-title>Woche</v-list-item-title>
               </v-list-item>
-              <v-list-item class="menu-buttons" @click="type = 'month'">
+              <v-list-item class="menu-buttons month" v-on:click="makeActive('month')" @click="type = 'month'">
                 <v-list-item-title>Monat</v-list-item-title>
               </v-list-item>
-              <v-list-item class="menu-buttons" @click="type = '4day'">
+              <v-list-item class="menu-buttons fourday" v-on:click="makeActive('fourday')" @click="type = '4day'">
                 <v-list-item-title>4 Tage</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -145,6 +145,7 @@ export default {
   data: () => ({
     deleteDialog: false,
     addEventDialog: false,
+    active: 'month',
     focus: "",
     type: "month",
     newEvent: {
@@ -170,6 +171,11 @@ export default {
     },
   },
   methods: {
+    makeActive(item){
+            // When a model is changed, the view will be automatically updated.
+            this.active = item;
+            //console.log(this.active)
+        },
     deleteEvent() {
       this.$store.dispatch("deleteEvent", this.selectedEvent);
       this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
@@ -259,9 +265,6 @@ export default {
   font-size: 5px !important;
 }
 
-/* ausgewählter button in anderer Farbe
-Tab bei hover andere Farbe */
-
 /* Toolbar */
 #toolbar-title {
   margin-left: 12px !important;
@@ -271,6 +274,13 @@ Tab bei hover andere Farbe */
 /* Menus */
 .v-application .v-autocomplete__content.menuable__content__active {
   border-radius: 20px !important;
+}
+
+.day .day,
+.week .week,
+.month .month,
+.fourday .fourday{
+    background-color: green;
 }
 
 /* Cards */

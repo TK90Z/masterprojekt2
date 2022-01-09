@@ -50,6 +50,7 @@
             v-on="on"
             @click="tab = 2"
             class="home-custom-tab"
+            id="unbestaetigt-tab"
             style="margin-right: auto"
           >
             <v-badge color="red"
@@ -152,12 +153,22 @@ export default {
   color: black !important;
 }
 
+.home-custom-tab:hover {
+  background-color: rgb(202, 200, 200);
+}
+
 #tabs {
-  border-radius: 20px !important;
+  padding-top: 5px;
+  padding-bottom: 25px;
 }
 
 .v-tabs-slider-wrapper {
   color: #007bff;
   height: 4px !important;
+}
+
+#unbestaetigt-tab {
+  min-width: 240px;
+  align-content: center;
 }
 </style>
