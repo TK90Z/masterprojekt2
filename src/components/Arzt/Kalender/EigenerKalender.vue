@@ -53,16 +53,32 @@
               </v-tooltip>
             </template>
             <v-list ripple v-bind:class="active">
-              <v-list-item class="menu-buttons day" v-on:click="makeActive('day')" @click="type = 'day'">
+              <v-list-item
+                class="menu-buttons day"
+                v-on:click="makeActive('day')"
+                @click="type = 'day'"
+              >
                 <v-list-item-title>Tag</v-list-item-title>
               </v-list-item>
-              <v-list-item class="menu-buttons week" v-on:click="makeActive('week')" @click="type = 'week'">
+              <v-list-item
+                class="menu-buttons week"
+                v-on:click="makeActive('week')"
+                @click="type = 'week'"
+              >
                 <v-list-item-title>Woche</v-list-item-title>
               </v-list-item>
-              <v-list-item class="menu-buttons month" v-on:click="makeActive('month')" @click="type = 'month'">
+              <v-list-item
+                class="menu-buttons month"
+                v-on:click="makeActive('month')"
+                @click="type = 'month'"
+              >
                 <v-list-item-title>Monat</v-list-item-title>
               </v-list-item>
-              <v-list-item class="menu-buttons fourday" v-on:click="makeActive('fourday')" @click="type = '4day'">
+              <v-list-item
+                class="menu-buttons fourday"
+                v-on:click="makeActive('fourday')"
+                @click="type = '4day'"
+              >
                 <v-list-item-title>4 Tage</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -112,8 +128,16 @@
                       Wollen Sie diesen Termin wirklich löschen?
                     </v-card-text>
                     <v-card-actions class="justify-end">
-                      <v-btn id="loeschen-card-loeschen" text @click="deleteEvent">Löschen</v-btn>
-                      <v-btn class="abbrechen-buttons" text @click="deleteDialog = false"
+                      <v-btn
+                        id="loeschen-card-loeschen"
+                        text
+                        @click="deleteEvent"
+                        >Löschen</v-btn
+                      >
+                      <v-btn
+                        class="abbrechen-buttons"
+                        text
+                        @click="deleteDialog = false"
                         >Abbrechen</v-btn
                       >
                     </v-card-actions>
@@ -125,7 +149,12 @@
               <span v-html="selectedEvent.details"></span>
             </v-card-text>
             <v-card-actions class="justify-end">
-              <v-btn class="abbrechen-buttons" text color="secondary" @click="selectedOpen = false">
+              <v-btn
+                class="abbrechen-buttons"
+                text
+                color="secondary"
+                @click="selectedOpen = false"
+              >
                 Abbrechen
               </v-btn>
             </v-card-actions>
@@ -145,7 +174,7 @@ export default {
   data: () => ({
     deleteDialog: false,
     addEventDialog: false,
-    active: 'month',
+    active: "month",
     focus: "",
     type: "month",
     newEvent: {
@@ -171,11 +200,10 @@ export default {
     },
   },
   methods: {
-    makeActive(item){
-            // When a model is changed, the view will be automatically updated.
-            this.active = item;
-            //console.log(this.active)
-        },
+    makeActive(item) {
+      // When a model is changed, the view will be automatically updated.
+      this.active = item;
+    },
     deleteEvent() {
       this.$store.dispatch("deleteEvent", this.selectedEvent);
       this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
@@ -261,10 +289,6 @@ export default {
   background-color: rgb(137, 255, 137);
 }
 
-.menu-buttons {
-  font-size: 5px !important;
-}
-
 /* Toolbar */
 #toolbar-title {
   margin-left: 12px !important;
@@ -279,8 +303,8 @@ export default {
 .day .day,
 .week .week,
 .month .month,
-.fourday .fourday{
-    background-color: green;
+.fourday .fourday {
+  color: rgb(39, 180, 39) !important;
 }
 
 /* Cards */
