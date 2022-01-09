@@ -3,7 +3,9 @@
         <v-tabs v-model="tab" background-color="transparent" centered icons-and-text>
             <v-tabs-slider></v-tabs-slider>
             <v-tooltip bottom>
-                <span>Tooltip </span>
+                <p class="mb-0">Hier können Sie all ihre Termine hinzufügen, egal ob </p>
+                <p class="mb-0">private Treffen oder wichtige Arzttermmine. (Nur Sie </p>
+                <p class="mb-0">sehen diese Ansicht.) </p>
                 <template v-slot:activator="{ on }">
                     <v-tab ripple v-on="on" @click="tab = 0" class="home-custom-tab" style="margin-left: auto;">
                         <div>Eigene Termine</div>
