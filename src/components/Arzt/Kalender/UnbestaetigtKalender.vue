@@ -107,7 +107,7 @@
         '4day': '4 Tage',
       },
       selectedEvent: {
-        creator:""
+        creator: ""
       },
       selectedElement: null,
       selectedOpen: false,
@@ -124,6 +124,9 @@
       },
       ownEvents() {
         return this.$store.getters.getOwnEvents
+      },
+      rights() {
+        return this.$store.getters.getRights
       }
     },
     watch: {
@@ -140,17 +143,28 @@
     methods: {
       deleteEvent() {
         this.$store.dispatch("deleteEvent", this.selectedEvent);
-        this.$store.dispatch("fetchUnconfirmedEvents", {ownUid: this.$store.getters.getUID, targetUid:this.$store.getters.getUID});
+        this.$store.dispatch("fetchUnconfirmedEvents", {
+          ownUid: this.$store.getters.getUID,
+          targetUid: this.$store.getters.getUID
+        });
         this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
         this.deleteDialog = false
       },
-      confirmeEvent(){
+      confirmeEvent() {
         console.log(this.selectedEvent)
-        if(this.eventCollisionCheck(this.selectedEvent.start.split(" ")[1]) || this.eventCollisionCheck(this.selectedEvent.end.split(" ")[1])) {
+        if (this.eventCollisionCheck(this.selectedEvent.start.split(" ")[1]) || this.eventCollisionCheck(this
+            .selectedEvent.end.split(" ")[1])) {
           alert('Sie haben zu dieser Zeit schon einen Termin!');
         } else {
           console.log("All good")
-          this.$store.dispatch("confirmUnconfirmedEvents", {confirmedEvent: this.selectedEvent, uids: {ownUid: this.$store.getters.getUID, targetUid: this.$store.getters.getUID}});
+          this.$store.dispatch("confirmUnconfirmedEvents", {
+            confirmedEvent: this.selectedEvent,
+            uids: {
+              ownUid: this.$store.getters.getUID,
+              targetUid: this.$store.getters.getUID
+            },
+            rights: this.rights
+          });
         }
       },
       eventCollisionCheck(value) {
@@ -183,7 +197,10 @@
         return collisionOccured
       },
       updateCalendar() {
-        this.$store.dispatch("fetchUnconfirmedEvents", {ownUid: this.$store.getters.getUID, targetUid: this.$store.getters.getUID});
+        this.$store.dispatch("fetchUnconfirmedEvents", {
+          ownUid: this.$store.getters.getUID,
+          targetUid: this.$store.getters.getUID
+        });
         this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
       },
       updateEvents() {
@@ -220,7 +237,7 @@
         event
       }) {
         console.log(event.creator.toString())
-          const open = () => {
+        const open = () => {
           this.selectedEvent = event
           this.selectedElement = nativeEvent.target
           requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
@@ -236,7 +253,10 @@
         nativeEvent.stopPropagation()
       },
       updateRange() {
-        this.$store.dispatch("fetchUnconfirmedEvents", {ownUid: this.$store.getters.getUID, targetUid: this.$store.getters.getUID});
+        this.$store.dispatch("fetchUnconfirmedEvents", {
+          ownUid: this.$store.getters.getUID,
+          targetUid: this.$store.getters.getUID
+        });
       },
       rnd(a, b) {
         return Math.floor((b - a + 1) * Math.random()) + a

@@ -20,7 +20,7 @@
                 <v-icon small class="mr-2" @click="item.editMode = false" v-if="item.editMode">
                     mdi-cancel
                 </v-icon>
-                <v-icon small @click="askForDelete(item)">
+                <v-icon small @click="askForDelete(item)" v-if="rights == 4">
                     mdi-delete
                 </v-icon>
             </template>

@@ -83,16 +83,26 @@ const actions = {
   },
 
   async confirmUnconfirmedEvents({
-    dispatch, getters
+    dispatch,
+    getters
   }, event) {
     console.log("Lets go")
     const db = getFirestore();
     const receiverRef = doc(db, "Nutzer", event.confirmedEvent.receiver);
     const receiverSnap = await getDoc(receiverRef);
     if (receiverSnap.exists()) {
-      await updateDoc(receiverRef, {
-        events: arrayUnion(event.confirmedEvent.id)
-      });
+      if (event.rights == 1) {
+        await updateDoc(receiverRef, {
+          events: arrayUnion(event.confirmedEvent.id),
+          doctors: arrayUnion(event.confirmedEvent.creator)
+        });
+      } else {
+        await updateDoc(receiverRef, {
+          events: arrayUnion(event.confirmedEvent.id),
+          patients: arrayUnion(event.confirmedEvent.creator)
+        });
+      }
+
       await updateDoc(receiverRef, {
         unconfirmedEvents: arrayRemove(event.confirmedEvent.id)
       });
@@ -110,9 +120,17 @@ const actions = {
     const creatorRef = doc(db, "Nutzer", event.confirmedEvent.creator);
     const creatorSnap = await getDoc(creatorRef);
     if (creatorSnap.exists()) {
-      await updateDoc(creatorRef, {
-        events: arrayUnion(event.confirmedEvent.id)
-      });
+      if (event.rights == 1) {
+        await updateDoc(creatorRef, {
+          events: arrayUnion(event.confirmedEvent.id),
+          patients: arrayUnion(event.confirmedEvent.receiver)
+        });
+      } else {
+        await updateDoc(creatorRef, {
+          events: arrayUnion(event.confirmedEvent.id),
+          doctors: arrayUnion(event.confirmedEvent.receiver)
+        });
+      }
       await updateDoc(creatorRef, {
         unconfirmedEvents: arrayRemove(event.confirmedEvent.id)
       });
@@ -127,7 +145,6 @@ const actions = {
         unconfirmedEvents: arrayRemove(event.confirmedEvent.id)
       });
     }
-    console.log("I did it")
     dispatch('fetchOwnEvents', getters.getUID);
     dispatch('fetchUnconfirmedEvents', event.uids);
   }

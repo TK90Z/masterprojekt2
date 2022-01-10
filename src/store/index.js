@@ -8,7 +8,7 @@ import doctors from './doctors'
 import unconfirmedEvents from './unconfirmedEvents'
 import universalDelete from './universalDelete'
 import users from './users'
-
+import medicamnets from './medicaments'
 
 Vue.use(Vuex)
 
@@ -27,6 +27,7 @@ export default new Vuex.Store({
     doctors,
     unconfirmedEvents,
     universalDelete,
-    users
+    users,
+    medicamnets
   }
 })

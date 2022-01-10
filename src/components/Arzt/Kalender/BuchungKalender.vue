@@ -170,7 +170,7 @@
           this.newEvent.time = JSON.parse(JSON.stringify(info.time))
           this.addEventDialog = true
         } else {
-          alert('Bitte wählen Sie zuerst einen Doktor aus!');
+          alert('Bitte wählen Sie zuerst einen Patienten aus!');
         }
       },
       save(newElement) {

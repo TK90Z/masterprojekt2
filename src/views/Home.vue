@@ -85,6 +85,11 @@
             link: "/patient/medikamente",
           },
           {
+            title: 'Ärzte',
+            icon: 'mdi-doctor',
+            link: "/patient/aerzte",
+          },
+          {
             title: 'Kalender',
             icon: 'mdi-calendar',
             link: "/patient/kalender",
@@ -96,16 +101,27 @@
             link: "/arzt/medikamente",
           },
           {
+            title: 'Patienten',
+            icon: 'mdi-account',
+            link: "/arzt/patienten",
+          },
+          {
             title: 'Kalender',
             icon: 'mdi-calendar',
             link: "/arzt/kalender",
           },
         ],
         adminItems: [{
-          title: 'Nutzer Verwaltung',
-          icon: 'mdi-pill',
-          link: "/admin/userConfig"
-        }, ],
+            title: 'Nutzer Verwaltung',
+            icon: 'mdi-shield-key',
+            link: "/admin/userConfig"
+          },
+          {
+            title: 'Medikamente hochladen',
+            icon: 'mdi-upload',
+            link: "/admin/uploadMedicine"
+          },
+        ],
       }
     },
     components: {
@@ -118,21 +134,23 @@
     },
     watch: {
       rights(value) {
-        switch (value) {
-          case 1:
-            this.$router.push('/patient/kalender')
-            break;
-          case 2:
-            this.$router.push('/arzt/kalender')
-            break;
-          case 3:
-            this.$router.push('/admin/userConfig')
-            break;
-          case 4:
-            this.$router.push('/admin/userConfig')
-            break;
-          default:
-            break;
+        if (this.$route.name == null) {
+          switch (value) {
+            case 1:
+              this.$router.push('/patient/kalender')
+              break;
+            case 2:
+              this.$router.push('/arzt/kalender')
+              break;
+            case 3:
+              this.$router.push('/admin/userConfig')
+              break;
+            case 4:
+              this.$router.push('/admin/userConfig')
+              break;
+            default:
+              break;
+          }
         }
       }
     },
