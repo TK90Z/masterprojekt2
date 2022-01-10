@@ -20,7 +20,7 @@
                 <v-icon small class="mr-2" @click="item.editMode = false" v-if="item.editMode">
                     mdi-cancel
                 </v-icon>
-                <v-icon small @click="deleteItem(item)">
+                <v-icon small @click="askForDelete(item)">
                     mdi-delete
                 </v-icon>
             </template>
@@ -31,6 +31,20 @@
                 <v-autocomplete v-model="item.editRights" :items="rechte" dense label="Rechte" item-text="text"
                     item-value="index" :disabled="autoDisable(item)"></v-autocomplete>
             </template></v-data-table>
+            <v-dialog v-model="deleteDialog" transition="dialog-top-transition" max-width="600">
+                <template>
+                  <v-card>
+                    <v-toolbar color="primary" dark>Nutzer löschen</v-toolbar>
+                    <v-card-text>
+                      Wollen Sie diesen Nutzer wirklich löschen?
+                    </v-card-text>
+                    <v-card-actions class="justify-end">
+                      <v-btn text @click="deleteUser">Löschen</v-btn>
+                      <v-btn text @click="deleteDialog = false">Abbrechen</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </template>
+              </v-dialog>
     </v-card>
 </template>
 
@@ -38,6 +52,8 @@
     export default {
         data() {
             return {
+                deleteDialog: false,
+                deleteItem: null,
                 headers: [{
                         text: 'Name',
                         align: 'start',
@@ -113,11 +129,21 @@
                     return false
                 }
             },
+            askForDelete(item){
+                console.log(item)
+                this.deleteItem =item
+                this.deleteDialog = true
+                console.log(this.deleteDialog)
+            },
+            deleteUser(){
+                const uid = this.deleteItem.uid
+                this.$store.dispatch("deleteUser", uid)
+                this.deleteDialog = false
+            },
             saveItem(item) {
                 const name = item.name
                 const rights = item.editRights
                 const uid = item.uid
-                console.log(name, rights, uid)
                 this.$store.dispatch("updateUser", {
                     name: name,
                     rights: rights,

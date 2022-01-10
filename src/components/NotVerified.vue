@@ -1,3 +1,3 @@
 <template>
-    <h1>Oh no no 😢</h1>
+    <h1>Sie sind leider noch nicht verifiziert! 😢</h1>
 </template>

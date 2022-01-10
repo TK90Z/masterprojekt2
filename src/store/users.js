@@ -5,7 +5,8 @@ import {
     updateDoc,
     doc,
     arrayUnion,
-    arrayRemove
+    arrayRemove,
+    deleteDoc
 } from "firebase/firestore";
 const state = {
     users: []
@@ -51,17 +52,32 @@ const actions = {
         await updateDoc(doctorRef, {
             doctors: arrayRemove(user.uid),
         });
-        if(user.rights == 1) {
+        if (user.rights == 1) {
             await updateDoc(patientRef, {
                 patients: arrayUnion(user.uid)
             });
         }
-        if(user.rights == 2) {
+        if (user.rights == 2) {
             await updateDoc(doctorRef, {
                 doctors: arrayUnion(user.uid)
             });
         }
     },
+    async deleteUser({
+        dispatch
+    }, uid) {
+        const db = getFirestore();
+        dispatch("fetchUsers")
+        await deleteDoc(doc(db, "Nutzer", uid));
+        const patientRef = doc(db, "Typen", "qiL18SAnqonCvvcL17s8");
+        await updateDoc(patientRef, {
+            patients: arrayRemove(uid),
+        });
+        const doctorRef = doc(db, "Typen", "l0vUmzsNeMYKENhMx49w");
+        await updateDoc(doctorRef, {
+            doctors: arrayRemove(uid),
+        });
+    }
 }
 const getters = {
     getUsers(state) {

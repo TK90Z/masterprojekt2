@@ -102,11 +102,10 @@
           },
         ],
         adminItems: [{
-            title: 'Nutzer Verwaltung',
-            icon: 'mdi-pill',
-            link: "/admin/userConfig"
-          },
-        ],
+          title: 'Nutzer Verwaltung',
+          icon: 'mdi-pill',
+          link: "/admin/userConfig"
+        }, ],
       }
     },
     components: {
@@ -115,6 +114,26 @@
     computed: {
       rights() {
         return this.$store.getters.getRights
+      }
+    },
+    watch: {
+      rights(value) {
+        switch (value) {
+          case 1:
+            this.$router.push('/patient/kalender')
+            break;
+          case 2:
+            this.$router.push('/arzt/kalender')
+            break;
+          case 3:
+            this.$router.push('/admin/userConfig')
+            break;
+          case 4:
+            this.$router.push('/admin/userConfig')
+            break;
+          default:
+            break;
+        }
       }
     },
     methods: {
