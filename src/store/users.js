@@ -14,7 +14,8 @@ import {
     getStorage,
     ref,
     uploadBytes,
-    getDownloadURL
+    getDownloadURL,
+    deleteObject
 } from "firebase/storage";
 const state = {
     users: [],
@@ -36,7 +37,9 @@ const actions = {
         console.log(data)
         const storage = getStorage();
 
-        const path = 'images/users/' + data.uid + "/" + data.picture.name
+        const name = "profilePicture." + data.picture.name.substring(data.picture.name.lastIndexOf('.')+1, data.picture.name.length) || data.picture.name;
+
+        const path = 'images/users/' + data.uid + "/" + name
 
         const mountainImagesRef = ref(storage, path);
 
@@ -45,7 +48,7 @@ const actions = {
             console.log(snapshot);
             dispatch("updateUserProfilePicture", {
                 uid: data.uid,
-                name: data.picture.name
+                name: name
             });
         });
     },
@@ -65,17 +68,13 @@ const actions = {
     async loadUserProfilePicture({
         commit
     }, uid) {
-
-        var name = ""
-
         const db = getFirestore();
         const userRef = doc(db, "Nutzer", uid);
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
-            name = userSnap.data().profilePicture
-        }
+            const name = userSnap.data().profilePicture
 
-        const fileName = "images/users/" + uid + "/" + name
+            const fileName = "images/users/" + uid + "/" + name
 
         const storage = getStorage();
         const starsRef = ref(storage, fileName);
@@ -106,6 +105,7 @@ const actions = {
                         break;
                 }
             });
+        }
     },
     async fetchUsers({
         commit
@@ -169,6 +169,23 @@ const actions = {
         dispatch
     }, uid) {
         const db = getFirestore();
+        const storage = getStorage();
+        const userRef = doc(db, "Nutzer", uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+            const name = userSnap.data().profilePicture
+
+            const fileName = "images/users/" + uid + "/" + name
+
+            const imageRef = ref(storage, fileName);
+
+            deleteObject(imageRef).then(() => {
+                // File deleted successfully
+              }).catch((error) => {
+                // Uh-oh, an error occurred!
+                console.log(error)
+              });
+        }
         dispatch("fetchUsers")
         await deleteDoc(doc(db, "Nutzer", uid));
         const patientRef = doc(db, "Typen", "qiL18SAnqonCvvcL17s8");

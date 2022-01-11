@@ -27,6 +27,7 @@
                 <v-row>
                     <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
                         <v-card>
+                            <img v-bind:src="item.profileImageSrc" alt="" style="width:100%">
                             <v-card-title class="subheading font-weight-bold">
                                 {{ item.name }}
                             </v-card-title>
@@ -117,6 +118,11 @@
             ownDoctors() {
                 return this.$store.getters.getOwnDoctors
             },
+        },
+        watch: {
+            ownDoctors(ownDoctors){
+                this.$store.dispatch("loadOwnDoctorsImages", ownDoctors);
+            }
         },
         mounted() {
             this.$store.dispatch("fetchOwnDoctors", this.$store.getters.getUID);
