@@ -18,7 +18,7 @@ const actions = {
         console.log(commit)
         const storage = getStorage();
 
-        const mountainImagesRef = ref(storage, 'images/mountains.jpg');
+        const mountainImagesRef = ref(storage, 'images/medicaments/mountains.jpg');
 
         uploadBytes(mountainImagesRef, file).then((snapshot) => {
             console.log('Uploaded a blob or file!');

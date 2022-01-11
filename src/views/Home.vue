@@ -6,7 +6,26 @@
       <v-toolbar-title>Medication-Master</v-toolbar-title>
 
       <v-spacer></v-spacer>
-
+      <v-avatar style="margin-right:25px; cursor:pointer" @click.stop="profilePictureDialog = true">
+        <img v-if="profilePicture" v-bind:src="profilePicture" alt="John">
+        <v-icon v-else dark>
+        mdi-account-circle
+      </v-icon>
+      </v-avatar>
+      <v-dialog v-model="profilePictureDialog" transition="dialog-top-transition" max-width="600">
+        <template>
+          <v-card>
+            <v-toolbar color="primary" dark>Laden sie hier bitte ein Profilbild hoch.</v-toolbar>
+            <v-card-text>
+              <v-file-input v-model="newProfilePicture" accept="image/png, image/jpeg, image/bmp"
+                prepend-icon="mdi-camera" label="Profilbild auswählen"></v-file-input>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn text @click="changeProfilePicture">Hochladen</v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
       <v-btn tile @click="logout" class="top-menu-buttons">
         Abmelden
         <v-icon right>
@@ -78,6 +97,8 @@
   export default {
     data() {
       return {
+        newProfilePicture: null,
+        profilePictureDialog: false,
         drawer: null,
         patientItems: [{
             title: 'Medikamente',
@@ -127,9 +148,15 @@
     components: {
       NotVerified,
     },
+    created(){
+      this.$store.dispatch("loadUserProfilePicture", this.$store.getters.getUID);
+    },
     computed: {
       rights() {
         return this.$store.getters.getRights
+      },
+      profilePicture(){
+        return this.$store.getters.getProfilePicture
       }
     },
     watch: {
@@ -155,6 +182,10 @@
       }
     },
     methods: {
+      changeProfilePicture() {
+        this.$store.dispatch("uploadProfilePicture", {picture: this.newProfilePicture, uid: this.$store.getters.getUID});
+        this.profilePictureDialog = false
+      },
       logout() {
         const auth = getAuth();
         signOut(auth).then(() => {})
