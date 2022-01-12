@@ -1,15 +1,12 @@
 <template>
-    <v-container fluid>
-        <v-data-iterator :items="ownDoctors" :items-per-page.sync="itemsPerPage" :page.sync="page" :search="search"
+    <v-container fluid v-if="rights == 1 || rights == 4">
+        <v-data-iterator :items="allDoctors" :items-per-page.sync="itemsPerPage" :page.sync="page" :search="search"
             :sort-by="sortBy.toLowerCase()" :sort-desc="sortDesc" hide-default-footer>
             <template v-slot:header>
                 <v-toolbar dark color="blue darken-3" class="mb-1">
                     <v-text-field v-model="search" clearable flat solo-inverted hide-details
                         prepend-inner-icon="mdi-magnify" label="Search"></v-text-field>
                     <template v-if="$vuetify.breakpoint.mdAndUp">
-                        <v-spacer></v-spacer>
-                        <v-select v-model="sortBy" flat solo-inverted hide-details :items="keys"
-                            prepend-inner-icon="mdi-magnify" label="Sort by"></v-select>
                         <v-spacer></v-spacer>
                         <v-btn-toggle v-model="sortDesc" mandatory>
                             <v-btn large depressed color="blue" :value="false">
@@ -27,7 +24,11 @@
                 <v-row>
                     <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
                         <v-card>
-                            <img v-bind:src="item.profileImageSrc" alt="" style="width:100%">
+                            <div style="display:flex; width:100%; margin: 0px">
+                                <img v-bind:src="item.profileImageSrc" alt=""
+                                    style="width:100%; margin:auto; max-width:300px; max-height:300px">
+                            </div>
+
                             <v-card-title class="subheading font-weight-bold">
                                 {{ item.name }}
                             </v-card-title>
@@ -35,15 +36,20 @@
                             <v-divider></v-divider>
 
                             <v-list dense>
-                                <v-list-item v-for="(key, index) in filteredKeys" :key="index">
-                                    <v-list-item-content :class="{ 'blue--text': sortBy === key }">
-                                        {{ key }}:
+                                <v-list-item>
+                                    <v-list-item-content>
+                                        Fachrichtung(en):
                                     </v-list-item-content>
-                                    <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === key }">
-                                        {{ item[key.toLowerCase()] }}
+                                    <v-list-item-content class="align-end">
+                                        {{ item.subjectAreaString }}
                                     </v-list-item-content>
                                 </v-list-item>
                             </v-list>
+                            <v-rating color="primary" half-increments length="5" readonly :size="ratingSize"
+                                :value="item.avgRating">
+                            </v-rating>
+                            <p v-if="notMyDoctor(item.patients)" class="clickable-text"
+                                @click="startRateDialog(item)">Bewertung abgeben</p>
                         </v-card>
                     </v-col>
                 </v-row>
@@ -82,13 +88,35 @@
                 </v-row>
             </template>
         </v-data-iterator>
+        <v-dialog v-model="rateDoctorDialog" transition="dialog-top-transition" max-width="600">
+            <template>
+                <v-card>
+                    <v-toolbar color="primary" dark>Bitte wählen sie eine Fachrichtung aus.</v-toolbar>
+                    <v-card-text>
+                        <v-rating v-model="rateDoctorValue" color="primary" half-increments length="5" hover size="64"
+                            :value="rateDoctorValue">
+                        </v-rating>
+                    </v-card-text>
+                    <v-card-actions class="justify-end">
+                        <v-btn text @click="rateDoctor">Abschicken</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </template>
+        </v-dialog>
     </v-container>
+    <NotAvailable v-else />
 </template>
 
 <script>
+    import NotAvailable from "../../components/NotAvailable";
     export default {
         data() {
             return {
+                rateDoctorDialog: false,
+                rateDoctorUid: null,
+                rateDoctorValue: 0,
+                windowWidth: window.innerWidth,
+                ratingSize: 40,
                 itemsPerPageArray: [4, 8, 12],
                 search: '',
                 filter: {},
@@ -96,38 +124,104 @@
                 page: 1,
                 itemsPerPage: 4,
                 sortBy: 'name',
-                keys: [
-                    'Name',
-                    'Calories',
-                    'Fat',
-                    'Carbs',
-                    'Protein',
-                    'Sodium',
-                    'Calcium',
-                    'Iron',
-                ],
             }
+        },
+        components: {
+            NotAvailable,
         },
         computed: {
             numberOfPages() {
-                return Math.ceil(this.ownDoctors.length / this.itemsPerPage)
+                return Math.ceil(this.allDoctors.length / this.itemsPerPage)
             },
-            filteredKeys() {
-                return this.keys.filter(key => key !== 'Name')
+            allDoctors() {
+                return this.$store.getters.getAllDoctors
             },
-            ownDoctors() {
-                return this.$store.getters.getOwnDoctors
+            subjectAreas() {
+                return this.$store.getters.getSubjectAreas
+            },
+            rights() {
+                return this.$store.getters.getRights;
             },
         },
         watch: {
-            ownDoctors(ownDoctors){
-                this.$store.dispatch("loadOwnDoctorsImages", ownDoctors);
+            allDoctors(allDoctors) {
+                this.$store.dispatch("loadAllDoctorsImages", allDoctors);
+            },
+            windowWidth(width) {
+                console.log(width)
+                if (width < 595) {
+                    this.ratingSize = 64
+                }
+                if (width < 430) {
+                    this.ratingSize = 50
+                }
+                if (width < 360) {
+                    this.ratingSize = 40
+                }
+                if (width < 310) {
+                    this.ratingSize = 30
+                }
+                if (width > 310) {
+                    this.ratingSize = 40
+                }
+                if (width > 430) {
+                    this.ratingSize = 50
+                }
+                if (width > 595) {
+                    this.ratingSize = 40
+                }
+                if (width > 700) {
+                    this.ratingSize = 50
+                }
             }
         },
         mounted() {
-            this.$store.dispatch("fetchOwnDoctors", this.$store.getters.getUID);
+            this.$store.dispatch("fetchAllDoctors", this.$store.getters.getUID);
+            this.$nextTick(() => {
+                window.addEventListener('resize', this.onResize);
+            })
+        },
+        beforeDestroy() {
+            window.removeEventListener('resize', this.onResize);
         },
         methods: {
+            notMyDoctor(patients) {
+                var isPatient = false
+                if (patients) {
+                    patients.forEach(patient => {
+                        if (patient == this.$store.getters.getUID) {
+                            isPatient = true
+                        }
+                    })
+                    return isPatient
+                } else
+                    return false
+            },
+            startRateDialog(item){
+                this.rateDoctorUid = item.uid
+                this.rateDoctorDialog = true
+            },
+            rateDoctor() {
+                this.$store.dispatch("rateDoctor", {value: this.rateDoctorValue, uids: { docUid: this.rateDoctorUid, myUid: this.$store.getters.getUID}});
+                this.rateDoctorDialog = false
+            },
+            onResize() {
+                this.windowWidth = window.innerWidth
+            },
+            subjectAreasAsString(subjectAreas) {
+                var subjectAreaString = ""
+
+                subjectAreas = JSON.parse(JSON.stringify(subjectAreas))
+
+                console.log(subjectAreas)
+
+                if (subjectAreas) {
+                    subjectAreas.array.forEach(subjectArea => {
+                        subjectAreaString = subjectAreaString + this.subjectAreas[subjectArea]
+                    });
+                }
+                return subjectAreaString
+            },
             nextPage() {
                 if (this.page + 1 <= this.numberOfPages) this.page += 1
             },
@@ -140,3 +234,12 @@
         },
     }
 </script>
+
+<style scoped>
+    .clickable-text {
+        cursor: pointer;
+        text-decoration: underline;
+        color: blue;
+        margin: 10px
+    }
+</style>

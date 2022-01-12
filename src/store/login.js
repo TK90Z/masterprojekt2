@@ -51,8 +51,8 @@ const actions = {
   }
 }
 const getters = {
-  user(state) {
-    return state.user
+  getUser(state) {
+    return state.data
   },
   isLoggedIn(state) {
     return state.loggedIn

@@ -46,6 +46,23 @@
                 </v-card>
             </template>
         </v-dialog>
+        <v-dialog v-model="patientCredentialsDialog" transition="dialog-top-transition" max-width="600" persistent>
+            <template>
+                <v-card>
+                    <v-toolbar color="primary" dark>Bitte tragen sie weitere Informationen zum Patienten ein.
+                    </v-toolbar>
+                    <v-card-text>
+                        <v-text-field v-model="patientCredentials.age" label="Alter"></v-text-field>
+                        <v-select v-model="patientCredentials.sex" :items="sexes" :menu-props="{ maxHeight: '400' }"
+                            label="Select" hint="Geschlecht" persistent-hint></v-select>
+                        <v-text-field v-model="patientCredentials.insurance" label="Versicherung"></v-text-field>
+                    </v-card-text>
+                    <v-card-actions class="justify-end">
+                        <v-btn text @click="changePatientCredentials">Ok</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </template>
+        </v-dialog>
         <v-dialog v-model="deleteDialog" transition="dialog-top-transition" max-width="600">
             <template>
                 <v-card>
@@ -71,6 +88,16 @@
                 deleteItem: null,
                 subjectAreaDialog: false,
                 subjectAreaItems: null,
+                patientCredentialsDialog: false,
+                patientCredentials: {
+                    age: null,
+                    sex: null,
+                    insurance: null
+                },
+                sexes: [
+                    "Männlich",
+                    "Weiblich"
+                ],
                 headers: [{
                         text: 'Name',
                         align: 'start',
@@ -123,27 +150,6 @@
                         disabled: true
                     },
                 ],
-                subjectAreas: [{
-                        index: 0,
-                        text: "Allgemein"
-                    },
-                    {
-                        index: 1,
-                        text: "Gynäkologe"
-                    },
-                    {
-                        index: 2,
-                        text: "Urologe"
-                    },
-                    {
-                        index: 3,
-                        text: "Orthopäde"
-                    },
-                    {
-                        index: 4,
-                        text: "Chiropraktiker",
-                    },
-                ]
             }
         },
         mounted() {
@@ -155,12 +161,20 @@
             },
             users() {
                 return this.$store.getters.getUsers
+            },
+            subjectAreas() {
+                return this.$store.getters.getSubjectAreas
             }
         },
         methods: {
-            stopEditMode(item){
+            changePatientCredentials() {
+                if (this.patientCredentials.age && this.patientCredentials.sex && this.patientCredentials.insurance) {
+                    this.patientCredentialsDialog = false
+                }
+            },
+            stopEditMode(item) {
                 item.editMode = false,
-                item.editRights = item.rights
+                    item.editRights = item.rights
                 item.editName = item.name
             },
             changeSubjectArea() {
@@ -172,6 +186,14 @@
                 if (item.editRights == 2) {
                     this.subjectAreaItems = item.subjectArea
                     this.subjectAreaDialog = true
+                }
+                if (item.editRights == 1) {
+                    this.patientCredentials = {
+                        age: item.age,
+                        sex: item.sex,
+                        insurance: item.insurance
+                    }
+                    this.patientCredentialsDialog = true
                 }
             },
             autoDisable(item) {
@@ -199,11 +221,13 @@
                 const rights = item.editRights
                 const uid = item.uid
                 const subjectArea = this.subjectAreaItems
+                const credentials = this.patientCredentials
                 this.$store.dispatch("updateUser", {
                     name: name,
                     rights: rights,
                     uid: uid,
-                    subjectArea: subjectArea
+                    subjectArea: subjectArea,
+                    credentials: credentials
                 })
             }
         },

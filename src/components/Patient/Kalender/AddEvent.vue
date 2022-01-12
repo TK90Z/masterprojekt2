@@ -37,14 +37,30 @@
                                         </v-text-field>
                                     </v-col>
                                     <v-col sm="12" md="12" lg="6" xl="6">
-                                        <v-text-field label="Startzeit" :rules="[ startRules ]" v-model="start" solo>
-
-                                        </v-text-field>
+                                        <v-menu ref="menu1" v-model="timeMenu1" :close-on-content-click="false"
+                                            :nudge-right="40" :return-value.sync="start" transition="scale-transition"
+                                            offset-y max-width="290px" min-width="290px">
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-text-field v-model="start" label="Startzeit"
+                                                    prepend-icon="mdi-clock-time-four-outline" readonly v-bind="attrs"
+                                                    v-on="on" :rules="[ startRules ]"></v-text-field>
+                                            </template>
+                                            <v-time-picker v-if="timeMenu1" format="24hr" v-model="start" full-width
+                                                @click:minute="$refs.menu1.save(start)"></v-time-picker>
+                                        </v-menu>
                                     </v-col>
                                     <v-col sm="12" md="12" lg="6" xl="6">
-                                        <v-text-field label="EndZeit" :rules="[ endRules ]" v-model="end" solo>
-
-                                        </v-text-field>
+                                        <v-menu ref="menu2" v-model="timeMenu2" :close-on-content-click="false"
+                                            :nudge-right="40" :return-value.sync="end" transition="scale-transition"
+                                            offset-y max-width="290px" min-width="290px">
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-text-field v-model="end" label="EndZeit"
+                                                    prepend-icon="mdi-clock-time-four-outline" readonly v-bind="attrs"
+                                                    v-on="on" :rules="[ endRules ]"></v-text-field>
+                                            </template>
+                                            <v-time-picker v-if="timeMenu2" format="24hr" v-model="end" full-width
+                                                @click:minute="$refs.menu2.save(end)"></v-time-picker>
+                                        </v-menu>
                                     </v-col>
                                     <v-col sm="12" md="12" lg="12" xl="12">
                                         <v-textarea v-model="details" color="teal"><template v-slot:label>
@@ -76,6 +92,8 @@
             events: null
         },
         data: () => ({
+            timeMenu1: false,
+            timeMenu2: false,
             color: '#FF0000',
             date: '',
             name: '',

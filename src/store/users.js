@@ -37,7 +37,7 @@ const actions = {
         console.log(data)
         const storage = getStorage();
 
-        const name = "profilePicture." + data.picture.name.substring(data.picture.name.lastIndexOf('.')+1, data.picture.name.length) || data.picture.name;
+        const name = "profilePicture." + data.picture.name.substring(data.picture.name.lastIndexOf('.') + 1, data.picture.name.length) || data.picture.name;
 
         const path = 'images/users/' + data.uid + "/" + name
 
@@ -76,35 +76,35 @@ const actions = {
 
             const fileName = "images/users/" + uid + "/" + name
 
-        const storage = getStorage();
-        const starsRef = ref(storage, fileName);
+            const storage = getStorage();
+            const starsRef = ref(storage, fileName);
 
-        // Get the download URL
-        getDownloadURL(starsRef)
-            .then((url) => {
-                commit("setProfilePicture", url)
-            })
-            .catch((error) => {
-                // A full list of error codes is available at
-                // https://firebase.google.com/docs/storage/web/handle-errors
-                switch (error.code) {
-                    case 'storage/object-not-found':
-                        // File doesn't exist
-                        break;
-                    case 'storage/unauthorized':
-                        // User doesn't have permission to access the object
-                        break;
-                    case 'storage/canceled':
-                        // User canceled the upload
-                        break;
+            // Get the download URL
+            getDownloadURL(starsRef)
+                .then((url) => {
+                    commit("setProfilePicture", url)
+                })
+                .catch((error) => {
+                    // A full list of error codes is available at
+                    // https://firebase.google.com/docs/storage/web/handle-errors
+                    switch (error.code) {
+                        case 'storage/object-not-found':
+                            // File doesn't exist
+                            break;
+                        case 'storage/unauthorized':
+                            // User doesn't have permission to access the object
+                            break;
+                        case 'storage/canceled':
+                            // User canceled the upload
+                            break;
 
-                        // ...
+                            // ...
 
-                    case 'storage/unknown':
-                        // Unknown error occurred, inspect the server response
-                        break;
-                }
-            });
+                        case 'storage/unknown':
+                            // Unknown error occurred, inspect the server response
+                            break;
+                    }
+                });
         }
     },
     async fetchUsers({
@@ -135,13 +135,28 @@ const actions = {
             await updateDoc(userRef, {
                 name: user.name,
                 rights: user.rights,
-                subjectArea: user.subjectArea
+                subjectArea: user.subjectArea,
+                age: deleteField(),
+                sex: deleteField(),
+                insurance: deleteField(),
+            });
+        } else if (user.rights == 1) {
+            await updateDoc(userRef, {
+                name: user.name,
+                rights: user.rights,
+                subjectArea: deleteField(),
+                age: user.credentials.age,
+                sex: user.credentials.sex,
+                insurance: user.credentials.insurance,
             });
         } else {
             await updateDoc(userRef, {
                 name: user.name,
                 rights: user.rights,
-                subjectArea: deleteField()
+                subjectArea: deleteField(),
+                age: deleteField(),
+                sex: deleteField(),
+                insurance: deleteField(),
             });
         }
 
@@ -181,10 +196,10 @@ const actions = {
 
             deleteObject(imageRef).then(() => {
                 // File deleted successfully
-              }).catch((error) => {
+            }).catch((error) => {
                 // Uh-oh, an error occurred!
                 console.log(error)
-              });
+            });
         }
         dispatch("fetchUsers")
         await deleteDoc(doc(db, "Nutzer", uid));
