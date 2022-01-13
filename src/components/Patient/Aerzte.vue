@@ -149,29 +149,23 @@
             },
             windowWidth(width) {
                 console.log(width)
-                if (width < 595) {
-                    this.ratingSize = 64
-                }
-                if (width < 430) {
-                    this.ratingSize = 50
-                }
-                if (width < 360) {
-                    this.ratingSize = 40
-                }
                 if (width < 310) {
                     this.ratingSize = 30
-                }
-                if (width > 310) {
+                } else if (width < 360) {
                     this.ratingSize = 40
-                }
-                if (width > 430) {
+                } else if (width < 430) {
                     this.ratingSize = 50
-                }
-                if (width > 595) {
-                    this.ratingSize = 40
+                } else if (width < 595) {
+                    this.ratingSize = 64
                 }
                 if (width > 700) {
                     this.ratingSize = 50
+                } else if (width > 595) {
+                    this.ratingSize = 40
+                } else if (width > 430) {
+                    this.ratingSize = 50
+                } else if (width > 310) {
+                    this.ratingSize = 40
                 }
             }
         },

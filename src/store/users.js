@@ -34,7 +34,6 @@ const actions = {
         dispatch
     }, data) {
 
-        console.log(data)
         const storage = getStorage();
 
         const name = "profilePicture." + data.picture.name.substring(data.picture.name.lastIndexOf('.') + 1, data.picture.name.length) || data.picture.name;

@@ -117,33 +117,34 @@
                 <v-card>
                     <v-toolbar color="primary" dark>Neue Diagnose erstellen</v-toolbar>
                     <v-card-text>
-                        <v-text-field v-model="newDiagnosis.date" :value="today" readonly label="Erstellungsdatum">Bla
+                        <v-text-field v-model="newDiagnosis.date" :value="today" readonly label="Erstellungsdatum">
                         </v-text-field>
                         <v-text-field v-model="newDiagnosis.name" :value="myCredentials.displayName" readonly
-                            label="Name des Erstellers">Bla
+                            label="Name des Erstellers">
                         </v-text-field>
                         <v-text-field v-model="newDiagnosis.email" :value="myCredentials.email" readonly
-                            label="Mail des Erstellers">Bla
+                            label="Mail des Erstellers">
                         </v-text-field>
-                        <v-text-field v-model="newDiagnosis.diagnosis" label="Diagnose">Bla</v-text-field>
-                        <v-text-field v-model="newDiagnosis.symptoms" label="Symptome">Bla</v-text-field>
-                        <v-text-field v-model="newDiagnosis.medications" label="Medikation">Bla</v-text-field>
+                        <v-text-field v-model="newDiagnosis.diagnosis" label="Diagnose"></v-text-field>
+                        <v-text-field v-model="newDiagnosis.symptoms" label="Symptome"></v-text-field>
+                        <v-select v-model="medicationsHolder" :items="medicaments" item-text="name" item-value="id"
+                            :menu-props="{ maxHeight: '400' }" label="Medikation" multiple
+                            hint="Wählen sie die Medikament(e) aus" persistent-hint></v-select>
                         <v-textarea v-model="newDiagnosis.details" label="Beschreibung"></v-textarea>
                     </v-card-text>
                     <v-card-actions class="justify-end">
-                        <v-btn @click="uploadDiagnosis" text>Abschicken</v-btn>
+                        <v-btn @click="medicationDetails" text>Abschicken</v-btn>
                     </v-card-actions>
                 </v-card>
             </template>
         </v-dialog>
-        <v-dialog v-model="inspectDiagnosisDialog" transition="dialog-top-transition" max-width="1000" width="800"
-            persistent>
+        <v-dialog v-model="inspectDiagnosisDialog" transition="dialog-top-transition" max-width="1000" width="800">
             <template>
                 <v-card>
                     <v-toolbar color="primary" dark>Neue Diagnose erstellen</v-toolbar>
                     <v-card-text>
                         <v-card-text class="pt-4">
-                            <v-text-field v-model="diagnosisSearch" label="Suche">Bla</v-text-field>
+                            <v-text-field v-model="diagnosisSearch" label="Suche"></v-text-field>
                         </v-card-text>
 
                         <v-divider></v-divider>
@@ -160,7 +161,8 @@
                                     </v-list-item-content>
 
                                     <v-list-item-content>
-                                        <v-list-item-title>{{ item.medications }}</v-list-item-title>
+                                        <v-list-item-title>{{ medicationsAsString(item.medications) }}
+                                        </v-list-item-title>
                                     </v-list-item-content>
 
                                     <v-list-item-action>
@@ -187,21 +189,50 @@
                 <v-card>
                     <v-toolbar color="primary" dark>Neue Diagnose erstellen</v-toolbar>
                     <v-card-text>
-                        <v-text-field v-model="openedDiagnosis.date" :value="today" readonly label="Erstellungsdatum">Bla
+                        <v-text-field v-model="openedDiagnosis.date" :value="today" readonly label="Erstellungsdatum">
                         </v-text-field>
                         <v-text-field v-model="openedDiagnosis.name" :value="myCredentials.displayName" readonly
-                            label="Name des Erstellers">Bla
+                            label="Name des Erstellers">
                         </v-text-field>
                         <v-text-field v-model="openedDiagnosis.email" :value="myCredentials.email" readonly
-                            label="Mail des Erstellers">Bla
+                            label="Mail des Erstellers">
                         </v-text-field>
-                        <v-text-field v-model="openedDiagnosis.diagnosis" label="Diagnose" readonly>Bla</v-text-field>
-                        <v-text-field v-model="openedDiagnosis.symptoms" label="Symptome" readonly>Bla</v-text-field>
-                        <v-text-field v-model="openedDiagnosis.medications" label="Medikation" readonly>Bla</v-text-field>
+                        <v-text-field v-model="openedDiagnosis.diagnosis" label="Diagnose" readonly></v-text-field>
+                        <v-text-field v-model="openedDiagnosis.symptoms" label="Symptome" readonly></v-text-field>
+                        <v-text-field :value="medicationsAsString(openedDiagnosis.medications)" label="Medikation"
+                            readonly></v-text-field>
                         <v-textarea v-model="openedDiagnosis.details" label="Beschreibung" readonly></v-textarea>
                     </v-card-text>
                     <v-card-actions class="justify-end">
                         <v-btn @click="openDiagnosisDialog = false" text>Schließen</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </template>
+        </v-dialog>
+        <v-dialog v-model="medicationDialog" transition="dialog-top-transition" max-width="600" width="400" persistent>
+            <template>
+                <v-card>
+                    <v-toolbar color="primary" dark>{{ newMedicament.name }}</v-toolbar>
+                    <v-card-text>
+                        <v-text-field v-model="newMedicament.amount" label="Einnahmemenge">
+                        </v-text-field>
+                        <v-text-field v-model="newMedicament.period" label="Dauer in Tagen">
+                        </v-text-field>
+                        <v-text-field v-model="newMedicament.frequency" label="Häufigkeit">
+                        </v-text-field>
+                        <v-menu ref="menu" v-model="menu" :close-on-content-click="false" transition="scale-transition"
+                            offset-y min-width="auto">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-text-field v-model="newMedicament.start" label="Beginn" prepend-icon="mdi-calendar" readonly
+                                    v-bind="attrs" v-on="on"></v-text-field>
+                            </template>
+                            <v-date-picker v-model="newMedicament.start" :active-picker.sync="activePicker"
+                                :min="(new Date(Date.now() + (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
+                                @change="save"></v-date-picker>
+                        </v-menu>
+                    </v-card-text>
+                    <v-card-actions class="justify-end">
+                        <v-btn @click="medicationDetails" text :disabled="allSet">Fertig</v-btn>
                     </v-card-actions>
                 </v-card>
             </template>
@@ -215,6 +246,26 @@
     export default {
         data() {
             return {
+                activePicker: null,
+                menu: false,
+                medicationDialog: false,
+                arrayIndex: 0,
+                medicationsHolder: [],
+                newMedicament: {
+                    id: null,
+                    name: null,
+                    amount: null,
+                    period: null,
+                    frequency: null,
+                    start: null
+                },
+                defaultMedicament: {
+                    id: null,
+                    amount: null,
+                    period: null,
+                    frequency: null,
+                    start: null
+                },
                 diagnosisSearch: "",
                 newDiagnosis: {
                     date: null,
@@ -222,7 +273,7 @@
                     email: null,
                     diagnosis: null,
                     symptoms: null,
-                    medications: null,
+                    medications: [],
                     details: null,
                 },
                 openedDiagnosis: {
@@ -231,7 +282,7 @@
                     email: null,
                     diagnosis: null,
                     symptoms: null,
-                    medications: null,
+                    medications: [],
                     details: null,
                 },
                 diagnosisArray: null,
@@ -247,16 +298,6 @@
                 page: 1,
                 itemsPerPage: 4,
                 sortBy: 'name',
-                keys: [
-                    'Name',
-                    'Calories',
-                    'Fat',
-                    'Carbs',
-                    'Protein',
-                    'Sodium',
-                    'Calcium',
-                    'Iron',
-                ],
             }
         },
         components: {
@@ -282,41 +323,71 @@
             myCredentials() {
                 console.log(this.$store.getters.getUser)
                 return this.$store.getters.getUser
-            }
+            },
+            medicaments() {
+                return this.$store.getters.getMedicaments
+            },
+            allSet() {
+                if (this.newMedicament.amount && this.newMedicament.period && this.newMedicament.frequency && this
+                    .newMedicament.start) {
+                    return false
+                } else {
+                    return true
+                }
+            },
         },
         watch: {
             ownPatients(ownPatients) {
                 this.$store.dispatch("loadOwnPatientsImages", ownPatients);
             },
-            diagnosisSearch(search){
+            diagnosisSearch(search) {
                 var newArray = []
                 this.diagnosisArray.forEach(element => {
-                    if(element.date.toLowerCase().includes(search.toLowerCase()))
-                    newArray.push(element)
-                    else if(element.name.toLowerCase().includes(search.toLowerCase()))
-                    newArray.push(element)
-                    else if(element.email.toLowerCase().includes(search.toLowerCase()))
-                    newArray.push(element)
-                    else if(element.diagnosis.toLowerCase().includes(search.toLowerCase()))
-                    newArray.push(element)
-                    else if(element.symptoms.toLowerCase().includes(search.toLowerCase()))
-                    newArray.push(element)
-                    else if(element.medications.toLowerCase().includes(search.toLowerCase()))
-                    newArray.push(element)
+                    if (element.date.toLowerCase().includes(search.toLowerCase()))
+                        newArray.push(element)
+                    else if (element.name.toLowerCase().includes(search.toLowerCase()))
+                        newArray.push(element)
+                    else if (element.email.toLowerCase().includes(search.toLowerCase()))
+                        newArray.push(element)
+                    else if (element.diagnosis.toLowerCase().includes(search.toLowerCase()))
+                        newArray.push(element)
+                    else if (element.symptoms.toLowerCase().includes(search.toLowerCase()))
+                        newArray.push(element)
+                    else if (element.medications.toLowerCase().includes(search.toLowerCase()))
+                        newArray.push(element)
                 });
                 this.searchedDiagnosisArray = newArray
             }
         },
         mounted() {
             this.$store.dispatch("fetchOwnPatients", this.$store.getters.getUID);
+            this.$store.dispatch("fetchMedicaments");
         },
         methods: {
+            save (date) {
+        this.$refs.menu.save(date)
+      },
+            medicationsAsString(medications) {
+                var medicationString = ""
+                medications.forEach(medication => {
+                    const found = this.medicaments.find(element => element.id == medication.id);
+                    if (found) {
+                        if (medicationString != "") {
+                            medicationString = medicationString + ", "
+                        }
+                        medicationString = medicationString + found.name
+                    }
+                })
+                return medicationString
+            },
             openDiagnosis(item) {
                 console.log(item)
                 this.openedDiagnosis = item
                 this.openDiagnosisDialog = true
             },
             addDiagnosis(uid) {
+                this.arrayIndex = 0
+                this.medicationsHolder = []
                 this.diagnosisForUid = uid
                 this.newDiagnosis = {
                     date: this.today,
@@ -324,10 +395,26 @@
                     email: this.myCredentials.email,
                     diagnosis: null,
                     symptoms: null,
-                    medications: null,
+                    medications: [],
                     details: null,
                 }
                 this.addDiagnosisDialog = true
+            },
+            medicationDetails() {
+                if (this.newMedicament.amount) {
+                    this.newDiagnosis.medications.push(this.newMedicament)
+                    this.newMedicament = this.defaultMedicament
+                }
+                this.medicationDialog = false
+                if (this.medicationsHolder[this.arrayIndex]) {
+                    var found = this.medicaments.find(element => element.id == this.medicationsHolder[this.arrayIndex]);
+                    this.newMedicament.name = found.name
+                    this.newMedicament.id = found.id
+                    this.medicationDialog = true
+                } else {
+                    this.uploadDiagnosis()
+                }
+                this.arrayIndex++
             },
             uploadDiagnosis() {
                 this.$store.dispatch("addNewDiagnosis", {
