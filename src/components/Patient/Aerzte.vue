@@ -23,8 +23,8 @@
             <template v-slot:default="props">
                 <v-row>
                     <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
-                        <v-card>
-                            <div style="display:flex; width:100%; margin: 0px">
+                        <v-card style="height:100%">
+                            <div style="display:flex; width:100%; margin: 0px; min-width:300px; min-height:300px; padding:10px">
                                 <img v-bind:src="item.profileImageSrc" alt=""
                                     style="width:100%; margin:auto; max-width:300px; max-height:300px">
                             </div>

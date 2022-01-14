@@ -195,7 +195,8 @@
           element.color = "#00ff00"
         });
         foreignEvents.forEach(element => {
-          element.color = "#ff0000"
+          element.color = "#ff0000",
+          element.name = " - " + element.end.split(" ")[1] + " Uhr"
         });
         this.events = ownEvents.concat(foreignEvents)
       },

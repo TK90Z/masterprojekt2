@@ -23,8 +23,8 @@
       <template v-slot:default="props">
         <v-row>
           <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
-            <v-card>
-              <div style="display:flex; width:100%; margin: 0px">
+            <v-card style="height:100%">
+              <div style="display:flex; width:100%; margin: 0px; min-width:300px; min-height:300px">
                 <img v-bind:src="item.profileImageSrc" alt=""
                   style="width:100%; margin:auto; max-width:300px; max-height:300px">
               </div>
@@ -103,15 +103,19 @@
         </v-row>
       </template>
     </v-data-iterator>
+    <PackungsBeilage :leaflet=leaflet v-model="leafletDialog"/>
   </v-container>
   <NotAvailable v-else />
 </template>
 
 <script>
   import NotAvailable from "../../components/NotAvailable";
+  import PackungsBeilage from "../../components/PackungsBeilage";
   export default {
     data() {
       return {
+        leaflet: null,
+        leafletDialog: false,
         itemsPerPageArray: [4, 8, 12],
         search: '',
         filter: {},
@@ -123,6 +127,7 @@
     },
     components: {
       NotAvailable,
+      PackungsBeilage
     },
     computed: {
       numberOfPages() {
@@ -148,7 +153,8 @@
     },
     methods: {
       inspectLeaflet(item) {
-        console.log(item)
+        this.leaflet = item
+        this.leafletDialog = true
       },
       nextPage() {
         if (this.page + 1 <= this.numberOfPages) this.page += 1

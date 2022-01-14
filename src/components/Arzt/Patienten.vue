@@ -23,8 +23,9 @@
             <template v-slot:default="props">
                 <v-row>
                     <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
-                        <v-card>
-                            <div style="display:flex; width:100%; margin: 0px">
+                        <v-card style="height:100%">
+                            <div
+                                style="display:flex; width:100%; margin: 0px; min-width:300px; min-height:300px; padding:10px">
                                 <img v-bind:src="item.profileImageSrc" alt=""
                                     style="width:100%; margin:auto; max-width:300px; max-height:300px">
                             </div>
@@ -133,7 +134,7 @@
                         <v-textarea v-model="newDiagnosis.details" label="Beschreibung"></v-textarea>
                     </v-card-text>
                     <v-card-actions class="justify-end">
-                        <v-btn @click="medicationDetails" text>Abschicken</v-btn>
+                        <v-btn :disabled="symptomsIsEmpty" @click="medicationDetails" text>Abschicken</v-btn>
                     </v-card-actions>
                 </v-card>
             </template>
@@ -223,8 +224,8 @@
                         <v-menu ref="menu" v-model="menu" :close-on-content-click="false" transition="scale-transition"
                             offset-y min-width="auto">
                             <template v-slot:activator="{ on, attrs }">
-                                <v-text-field v-model="newMedicament.start" label="Beginn" prepend-icon="mdi-calendar" readonly
-                                    v-bind="attrs" v-on="on"></v-text-field>
+                                <v-text-field v-model="newMedicament.start" label="Beginn" prepend-icon="mdi-calendar"
+                                    readonly v-bind="attrs" v-on="on"></v-text-field>
                             </template>
                             <v-date-picker v-model="newMedicament.start" :active-picker.sync="activePicker"
                                 :min="(new Date(Date.now() + (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
@@ -301,7 +302,7 @@
             }
         },
         components: {
-            NotAvailable,
+            NotAvailable
         },
         computed: {
             numberOfPages() {
@@ -335,6 +336,9 @@
                     return true
                 }
             },
+            symptomsIsEmpty() {
+                return (!this.newDiagnosis.symptoms || this.newDiagnosis.symptoms == "")
+            },
         },
         watch: {
             ownPatients(ownPatients) {
@@ -364,9 +368,9 @@
             this.$store.dispatch("fetchMedicaments");
         },
         methods: {
-            save (date) {
-        this.$refs.menu.save(date)
-      },
+            save(date) {
+                this.$refs.menu.save(date)
+            },
             medicationsAsString(medications) {
                 var medicationString = ""
                 medications.forEach(medication => {

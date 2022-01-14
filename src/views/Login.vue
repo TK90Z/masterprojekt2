@@ -1,7 +1,7 @@
 <template>
     <v-app id="inspire">
         <v-main>
-            <v-container fluid fill-height v-if="hasAccount">
+            <v-container fluid fill-height v-if="hasAccount && needsPassword">
                 <v-layout align-center justify-center>
                     <v-flex xs12 sm8 md4>
                         <v-card class="elevation-12">
@@ -22,6 +22,9 @@
                             </v-card-text>
                             <v-card-actions>
                                 <v-card-text class="clickable-text" @click.stop="hasAccount=false">Noch kein Konto?
+                                </v-card-text>
+                                <v-card-text class="clickable-text" @click.stop="needsPassword=false">Passwort
+                                    vergessen?
                                 </v-card-text>
                                 <v-spacer></v-spacer>
                                 <v-btn color="primary" @click.stop="login">Anmelden</v-btn>
@@ -63,6 +66,33 @@
                     </v-flex>
                 </v-layout>
             </v-container>
+            <v-container fluid fill-height v-if="!needsPassword">
+                <v-layout align-center justify-center>
+                    <v-flex xs12 sm8 md4>
+                        <v-card class="elevation-12">
+                            <v-toolbar dark color="primary">
+                                <v-toolbar-title>Passwort zurücksetzten</v-toolbar-title>
+                            </v-toolbar>
+                            <v-card-text>
+                                <v-form>
+                                    <v-text-field v-model="passwortResetForm.email" id="email" prepend-icon="mdi-email"
+                                        name="email" label="E-Mail" type="text" v-on:keyup.enter="sendPasswordReset">
+                                    </v-text-field>
+                                </v-form>
+                                <p v-if="error" class="text-center error-message">
+                                    {{ error }}
+                                </p>
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-card-text class="clickable-text" @click.stop="needsPassword=true">Ick kenne mein
+                                    Passwort!</v-card-text>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" @click.stop="sendPasswordReset">Anfordern</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-flex>
+                </v-layout>
+            </v-container>
         </v-main>
     </v-app>
 </template>
@@ -72,7 +102,8 @@
         getAuth,
         createUserWithEmailAndPassword,
         signInWithEmailAndPassword,
-        updateProfile
+        updateProfile,
+        sendPasswordResetEmail
     } from "firebase/auth";
     import {
         getFirestore,
@@ -92,11 +123,29 @@
                     email: "",
                     password: ""
                 },
+                passwortResetForm: {
+                    email: "",
+                },
                 error: null,
-                hasAccount: true
+                hasAccount: true,
+                needsPassword: true,
             };
         },
         methods: {
+            sendPasswordReset() {
+                const auth = getAuth();
+                sendPasswordResetEmail(auth, this.passwortResetForm.email)
+                    .then(() => {
+                        // Password reset email sent!
+                        // ..
+                    })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        console.log(errorCode, errorMessage)
+                        // ..
+                    });
+            },
             login() {
                 const auth = getAuth();
                 signInWithEmailAndPassword(auth, this.loginForm.email, this.loginForm.password)
