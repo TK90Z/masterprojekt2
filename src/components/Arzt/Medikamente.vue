@@ -9,11 +9,11 @@
           <template v-if="$vuetify.breakpoint.mdAndUp">
             <v-spacer></v-spacer>
             <v-btn-toggle v-model="sortDesc" mandatory>
-              <v-btn large depressed color="blue" :value="false">
-                <v-icon>mdi-arrow-up</v-icon>
+              <v-btn class="sort-buttons" small depressed color="blue" :value="false">
+                <v-icon small>mdi-arrow-up</v-icon>
               </v-btn>
-              <v-btn large depressed color="blue" :value="true">
-                <v-icon>mdi-arrow-down</v-icon>
+              <v-btn class="sort-buttons" small depressed color="blue" :value="true">
+                <v-icon small>mdi-arrow-down</v-icon>
               </v-btn>
             </v-btn-toggle>
           </template>
@@ -72,7 +72,7 @@
 
       <template v-slot:footer>
         <v-row class="mt-2" align="center" justify="center">
-          <span class="grey--text">Items per page</span>
+          <span class="grey--text" id="items-per-page" >Items per page</span>
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn dark text color="primary" class="ml-2" v-bind="attrs" v-on="on">
@@ -168,3 +168,13 @@
     },
   }
 </script>
+
+<style>
+  #items-per-page {
+    margin-left: 12px;
+  }
+
+  .sort-buttons {
+    border-color: black;
+  }
+</style>

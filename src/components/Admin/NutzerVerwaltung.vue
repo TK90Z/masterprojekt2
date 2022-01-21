@@ -37,7 +37,7 @@
                     <v-toolbar color="primary" dark>Bitte wählen sie eine Fachrichtung aus.</v-toolbar>
                     <v-card-text>
                         <v-select v-model="subjectAreaItems" :items="subjectAreas" item-text="text" item-value="index"
-                            :menu-props="{ maxHeight: '400' }" label="Select" multiple
+                            :menu-props="{ maxHeight: '400' }" multiple
                             hint="Wählen sie die Fachrichtung(en) aus" persistent-hint></v-select>
                     </v-card-text>
                     <v-card-actions class="justify-end">

@@ -10,11 +10,6 @@
                         </v-btn>
                         <v-toolbar-title>{{ leaflet.name }}</v-toolbar-title>
                         <v-spacer></v-spacer>
-                        <v-toolbar-items>
-                            <v-btn dark text @click="dialog.value = false">
-                                Schließen
-                            </v-btn>
-                        </v-toolbar-items>
                     </v-toolbar>
                     <v-form ref="form" @submit.prevent="submit">
                         <v-card-text>
