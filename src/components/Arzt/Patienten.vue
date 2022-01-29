@@ -4,17 +4,28 @@
             :sort-by="sortBy.toLowerCase()" :sort-desc="sortDesc" hide-default-footer>
             <template v-slot:header>
                 <v-toolbar dark color="blue darken-3" class="mb-1">
-                    <v-text-field v-model="search" clearable flat solo-inverted hide-details
-                        prepend-inner-icon="mdi-magnify" label="Search"></v-text-field>
+                    <v-text-field rounded="xl" v-model="search" clearable flat solo-inverted hide-details
+                        prepend-inner-icon="mdi-magnify" label="Suche"></v-text-field>
                     <template v-if="$vuetify.breakpoint.mdAndUp">
                         <v-spacer></v-spacer>
+                        <div class="alpha-sort" > Alphabetisch sortieren: </div>
                         <v-btn-toggle v-model="sortDesc" mandatory>
-                            <v-btn large depressed color="blue" :value="false">
-                                <v-icon>mdi-arrow-up</v-icon>
-                            </v-btn>
-                            <v-btn large depressed color="blue" :value="true">
-                                <v-icon>mdi-arrow-down</v-icon>
-                            </v-btn>
+                        <v-tooltip v-model="show" bottom>
+                            <template v-slot:activator="{ on }">
+                             <v-btn v-on="on" elevation="3" small depressed color="blue" :value="false">
+                             <v-icon small>mdi-arrow-up</v-icon>
+                         </v-btn>
+                         </template>
+                         <span>aufsteigend</span>
+                        </v-tooltip>
+                        <v-tooltip v-model="show" bottom>
+                         <template v-slot:activator="{ on }">
+                             <v-btn v-on="on" elevation="3" small depressed color="blue" :value="true">
+                              <v-icon small>mdi-arrow-down</v-icon>
+                             </v-btn>
+                            </template>
+                            <span>absteigend</span>
+                         </v-tooltip>
                         </v-btn-toggle>
                     </template>
                 </v-toolbar>
@@ -23,7 +34,7 @@
             <template v-slot:default="props">
                 <v-row>
                     <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">
-                        <v-card style="height:100%">
+                        <v-card id="v-card" style="height:100%">
                             <div
                                 style="display:flex; width:100%; margin: 0px; min-width:300px; min-height:300px; padding:10px">
                                 <img v-bind:src="item.profileImageSrc" alt=""
@@ -82,15 +93,15 @@
 
             <template v-slot:footer>
                 <v-row class="mt-2" align="center" justify="center">
-                    <span class="grey--text">Items per page</span>
-                    <v-menu offset-y>
+                    <span class="grey--text items-per-page">Items per page:</span>
+                    <v-menu offset-y top rounded="lg">
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn dark text color="primary" class="ml-2" v-bind="attrs" v-on="on">
+                            <v-btn rounded="lg" dark text color="primary" class="ml-2 items-per-page" v-bind="attrs" v-on="on">
                                 {{ itemsPerPage }}
                                 <v-icon>mdi-chevron-down</v-icon>
                             </v-btn>
                         </template>
-                        <v-list>
+                        <v-list rounded="lg" class="text-center">
                             <v-list-item v-for="(number, index) in itemsPerPageArray" :key="index"
                                 @click="updateItemsPerPage(number)">
                                 <v-list-item-title>{{ number }}</v-list-item-title>
@@ -104,10 +115,10 @@
             grey--text">
                         Page {{ page }} of {{ numberOfPages }}
                     </span>
-                    <v-btn fab dark color="blue darken-3" class="mr-1" @click="formerPage">
+                    <v-btn small fab dark color="blue darken-3" class="mr-1 page-buttons" @click="formerPage">
                         <v-icon>mdi-chevron-left</v-icon>
                     </v-btn>
-                    <v-btn fab dark color="blue darken-3" class="ml-1" @click="nextPage">
+                    <v-btn small fab dark color="blue darken-3" class="ml-1 page-buttons" @click="nextPage">
                         <v-icon>mdi-chevron-right</v-icon>
                     </v-btn>
                 </v-row>

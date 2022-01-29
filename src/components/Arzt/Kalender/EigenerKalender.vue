@@ -52,7 +52,13 @@
                 <span>Ansicht ändern </span>
               </v-tooltip>
             </template>
-            <v-list ripple v-bind:class="active">
+            <v-list
+              ripple
+              v-bind:class="active"
+              rounded="lg"
+              class="text-center"
+              color="rgb(241, 237, 237)"
+            >
               <v-list-item
                 class="menu-buttons day"
                 v-on:click="makeActive('day')"
@@ -305,6 +311,13 @@ export default {
 .month .month,
 .fourday .fourday {
   color: rgb(39, 180, 39) !important;
+}
+
+.day .day:hover,
+.week .week:hover,
+.month .month:hover,
+.fourday .fourday:hover {
+  color: rgba(72, 255, 0, 0.945) !important;
 }
 
 /* Cards */
