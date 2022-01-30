@@ -2,7 +2,7 @@
   <v-row class="fill-height">
     <v-col>
       <v-sheet height="64">
-        <v-toolbar flat>
+        <v-toolbar flat class="light-blue lighten-5">
           <v-btn
             id="heute-button"
             outlined
@@ -13,10 +13,10 @@
             Heute
           </v-btn>
           <v-btn fab text small color="grey darken-2" @click="prev">
-            <v-icon small> mdi-chevron-left </v-icon>
+            <v-icon small class="left-right-buttons"> mdi-chevron-left </v-icon>
           </v-btn>
           <v-btn fab text small color="grey darken-2" @click="next">
-            <v-icon small> mdi-chevron-right </v-icon>
+            <v-icon small class="left-right-buttons"> mdi-chevron-right </v-icon>
           </v-btn>
           <v-toolbar-title id="toolbar-title" v-if="$refs.calendar">
             {{ $refs.calendar.title }}
@@ -34,6 +34,7 @@
               <v-tooltip id="menu-tooltip" top>
                 <template v-slot:activator="{ on: tooltip, attrs }">
                   <v-btn
+                    id="ansicht-button"
                     outlined
                     color="grey darken-2"
                     v-bind="attrs"
@@ -46,7 +47,13 @@
                 <span>Ansicht ändern </span>
               </v-tooltip>
             </template>
-            <v-list ripple v-bind:class="active">
+            <v-list
+              ripple
+              v-bind:class="active"
+              rounded="lg"
+              class="text-center"
+              color="rgb(241, 237, 237)"
+            >
               <v-list-item
                 class="menu-buttons day"
                 v-on:click="makeActive('day')"
@@ -81,9 +88,10 @@
       </v-sheet>
       <v-sheet height="600">
         <v-calendar
+          id="calendar"
           ref="calendar"
           v-model="focus"
-          color="primary"
+          color="light-green accent-4"
           :events="events"
           :event-color="getEventColor"
           :type="type"
@@ -127,8 +135,16 @@
                       Wollen Sie diesen Termin wirklich löschen?
                     </v-card-text>
                     <v-card-actions class="justify-end">
-                      <v-btn id="loeschen-card-loeschen" text @click="deleteEvent">Löschen</v-btn>
-                      <v-btn class="abbrechen-buttons" text @click="deleteDialog = false"
+                      <v-btn
+                        id="loeschen-card-loeschen"
+                        text
+                        @click="deleteEvent"
+                        >Löschen</v-btn
+                      >
+                      <v-btn
+                        class="abbrechen-buttons"
+                        text
+                        @click="deleteDialog = false"
                         >Abbrechen</v-btn
                       >
                     </v-card-actions>
@@ -171,10 +187,10 @@ export default {
       "4day": "4 Tage",
     },
     selectedEvent: {
-      creator: ""
+      creator: "",
     },
     selectedElement: null,
-    selectedOpen: false
+    selectedOpen: false,
   }),
   mounted() {
     this.$refs.calendar.checkChange();
@@ -190,8 +206,8 @@ export default {
       return this.$store.getters.getOwnEvents;
     },
     rights() {
-      return this.$store.getters.getRights
-    }
+      return this.$store.getters.getRights;
+    },
   },
   watch: {
     uid() {
@@ -202,45 +218,47 @@ export default {
     },
     ownEvents() {
       this.updateEvents();
-    }
+    },
   },
   methods: {
-        makeActive(item) {
+    makeActive(item) {
       // When a model is changed, the view will be automatically updated.
       this.active = item;
     },
-      deleteEvent() {
-        this.$store.dispatch("deleteEvent", this.selectedEvent);
-        this.$store.dispatch("fetchUnconfirmedEvents", {
-          ownUid: this.$store.getters.getUID,
-          targetUid: this.$store.getters.getUID
+    deleteEvent() {
+      this.$store.dispatch("deleteEvent", this.selectedEvent);
+      this.$store.dispatch("fetchUnconfirmedEvents", {
+        ownUid: this.$store.getters.getUID,
+        targetUid: this.$store.getters.getUID,
+      });
+      this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
+      this.deleteDialog = false;
+    },
+    confirmeEvent() {
+      console.log(this.selectedEvent);
+      if (
+        this.eventCollisionCheck(this.selectedEvent.start.split(" ")[1]) ||
+        this.eventCollisionCheck(this.selectedEvent.end.split(" ")[1])
+      ) {
+        alert("Sie haben zu dieser Zeit schon einen Termin!");
+      } else {
+        console.log("All good");
+        this.$store.dispatch("confirmUnconfirmedEvents", {
+          confirmedEvent: this.selectedEvent,
+          uids: {
+            ownUid: this.$store.getters.getUID,
+            targetUid: this.$store.getters.getUID,
+          },
+          rights: this.rights,
         });
-        this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
-        this.deleteDialog = false
-      },
-      confirmeEvent() {
-        console.log(this.selectedEvent)
-        if (this.eventCollisionCheck(this.selectedEvent.start.split(" ")[1]) || this.eventCollisionCheck(this
-            .selectedEvent.end.split(" ")[1])) {
-          alert('Sie haben zu dieser Zeit schon einen Termin!');
-        } else {
-          console.log("All good")
-          this.$store.dispatch("confirmUnconfirmedEvents", {
-            confirmedEvent: this.selectedEvent,
-            uids: {
-              ownUid: this.$store.getters.getUID,
-              targetUid: this.$store.getters.getUID
-            },
-            rights: this.rights
-          });
-        }
-      },
-      eventCollisionCheck(value) {
-        console.log(value)
-        var collisionOccured = false
-        var newTime = value.split(":")
-        var newHappyHourD = new Date();
-        newHappyHourD.setHours(parseInt(newTime[0]), parseInt(newTime[1]), 0);
+      }
+    },
+    eventCollisionCheck(value) {
+      console.log(value);
+      var collisionOccured = false;
+      var newTime = value.split(":");
+      var newHappyHourD = new Date();
+      newHappyHourD.setHours(parseInt(newTime[0]), parseInt(newTime[1]), 0);
 
       this.ownEvents.forEach((event) => {
         var start = event.start.split(" ");
@@ -274,55 +292,57 @@ export default {
               return false;
             }
           }
-        }});
-        return collisionOccured
-      },
-      updateCalendar() {
-        this.$store.dispatch("fetchUnconfirmedEvents", {
-          ownUid: this.$store.getters.getUID,
-          targetUid: this.$store.getters.getUID
-        });
-        this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
-      },
-      updateEvents() {
-        var ownEvents = JSON.parse(JSON.stringify(this.$store.getters.getOwnEvents))
-        var unconfirmedEvents = JSON.parse(JSON.stringify(this.$store.getters.getOwnUnconfirmedEvents))
-        ownEvents.forEach(element => {
-          element.color = "#00ff00"
-        });
-        unconfirmedEvents.forEach(element => {
-          element.color = "#ff0000"
-        });
-        this.events = ownEvents.concat(unconfirmedEvents)
-      },
-      viewDay({
-        date
-      }) {
-        this.focus = date
-        this.type = 'day'
-      },
-      getEventColor(event) {
-        return event.color
-      },
-      setToday() {
-        this.focus = ''
-      },
-      prev() {
-        this.$refs.calendar.prev()
-      },
-      next() {
-        this.$refs.calendar.next()
-      },
-      showEvent({
-        nativeEvent,
-        event
-      }) {
-        console.log(event.creator.toString())
-        const open = () => {
-          this.selectedEvent = event
-          this.selectedElement = nativeEvent.target
-          requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
         }
+      });
+      return collisionOccured;
+    },
+    updateCalendar() {
+      this.$store.dispatch("fetchUnconfirmedEvents", {
+        ownUid: this.$store.getters.getUID,
+        targetUid: this.$store.getters.getUID,
+      });
+      this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
+    },
+    updateEvents() {
+      var ownEvents = JSON.parse(
+        JSON.stringify(this.$store.getters.getOwnEvents)
+      );
+      var unconfirmedEvents = JSON.parse(
+        JSON.stringify(this.$store.getters.getOwnUnconfirmedEvents)
+      );
+      ownEvents.forEach((element) => {
+        element.color = "#00ff00";
+      });
+      unconfirmedEvents.forEach((element) => {
+        element.color = "#ff0000";
+      });
+      this.events = ownEvents.concat(unconfirmedEvents);
+    },
+    viewDay({ date }) {
+      this.focus = date;
+      this.type = "day";
+    },
+    getEventColor(event) {
+      return event.color;
+    },
+    setToday() {
+      this.focus = "";
+    },
+    prev() {
+      this.$refs.calendar.prev();
+    },
+    next() {
+      this.$refs.calendar.next();
+    },
+    showEvent({ nativeEvent, event }) {
+      console.log(event.creator.toString());
+      const open = () => {
+        this.selectedEvent = event;
+        this.selectedElement = nativeEvent.target;
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => (this.selectedOpen = true))
+        );
+      };
       if (this.selectedOpen) {
         this.selectedOpen = false;
         requestAnimationFrame(() => requestAnimationFrame(() => open()));
@@ -330,17 +350,17 @@ export default {
         open();
       }
 
-        nativeEvent.stopPropagation();
-      },
-      updateRange() {
-        this.$store.dispatch("fetchUnconfirmedEvents", {
-          ownUid: this.$store.getters.getUID,
-          targetUid: this.$store.getters.getUID
-        });
-      },
-      rnd(a, b) {
-        return Math.floor((b - a + 1) * Math.random()) + a;
-      },
+      nativeEvent.stopPropagation();
     },
-  }
+    updateRange() {
+      this.$store.dispatch("fetchUnconfirmedEvents", {
+        ownUid: this.$store.getters.getUID,
+        targetUid: this.$store.getters.getUID,
+      });
+    },
+    rnd(a, b) {
+      return Math.floor((b - a + 1) * Math.random()) + a;
+    },
+  },
+};
 </script>

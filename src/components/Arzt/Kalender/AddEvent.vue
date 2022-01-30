@@ -6,7 +6,7 @@
                     <v-toolbar color="primary" dark>Termin erstellen</v-toolbar>
                     <v-form ref="form" @submit.prevent="submit">
                         <v-card-text>
-                            <v-container fluid>
+                            <v-container class="blue lighten-4" fluid>
                                 <v-row justify="center" align="center">
                                     <v-col sm="12" md="12" lg="8" xl="8">
                                         <v-text-field label="Datum" :rules="[ dateRules ]" v-model="date" solo>

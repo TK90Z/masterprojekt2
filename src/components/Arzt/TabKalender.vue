@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="rights == 2 || rights == 4">
+  <v-card class="light-blue lighten-5" v-if="rights == 2 || rights == 4">
     <v-tabs
       v-model="tab"
       background-color="transparent"
@@ -151,10 +151,12 @@ export default {
 /* Tabs */
 .home-custom-tab {
   color: black !important;
+  border-radius: 8px;
 }
 
 .home-custom-tab:hover {
   background-color: rgb(202, 200, 200);
+  border-radius: 8px;
 }
 
 #tabs {

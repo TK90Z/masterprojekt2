@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="rights == 2 || rights == 4">
+  <v-container class="light-blue lighten-5" fluid v-if="rights == 2 || rights == 4">
     <v-data-iterator :items="medicaments" :items-per-page.sync="itemsPerPage" :page.sync="page" :search="search"
       sort-by="name" :sort-desc="sortDesc" hide-default-footer>
       <template v-slot:header>
@@ -34,7 +34,7 @@
       <template v-slot:default="props">
         <v-row>
           <v-col v-for="item in props.items" :key="item.name" cols="12" sm="6" md="4" lg="3">  
-            <v-card id="v-card" style="height:100%">
+            <v-card id="v-card" style="height:100%" elevation="10" outlined>
               <div style="display:flex; width:100%; margin: 0px; min-width:300px; min-height:300px">
                 <img v-bind:src="item.profileImageSrc" alt=""
                   style="width:100%; margin:auto; max-width:300px; max-height:300px">
@@ -100,7 +100,7 @@
           </v-menu>
           <v-spacer></v-spacer>
           <span class="mr-4
-            grey--text">
+            grey--text page-buttons">
             Page {{ page }} of {{ numberOfPages }}
           </span>
           <v-btn small fab dark color="blue darken-3" class="mr-1 page-buttons" @click="formerPage">
@@ -182,7 +182,7 @@
   /* Layout (Buttons, Hinweise): */
   .items-per-page {
     margin-left: 12px;
-    margin-top: 5px;
+    margin-top: 8px;
   }
 
   .alpha-sort {
@@ -192,7 +192,7 @@
 
   .page-buttons {
     margin-bottom: 8px;
-    margin-top: 5px;
+    margin-top: 8px;
     margin-right: 12px;
   }
 

@@ -8,7 +8,7 @@
     />
     <v-col>
       <v-sheet height="64">
-        <v-toolbar flat>
+        <v-toolbar flat class="light-blue lighten-5">
           <v-btn
             id="heute-button"
             outlined
@@ -19,10 +19,10 @@
             Heute
           </v-btn>
           <v-btn fab text small color="grey darken-3" @click="prev">
-            <v-icon small> mdi-chevron-left </v-icon>
+            <v-icon small class="left-right-buttons"> mdi-chevron-left </v-icon>
           </v-btn>
           <v-btn fab text small color="grey darken-3" @click="next">
-            <v-icon small> mdi-chevron-right </v-icon>
+            <v-icon small class="left-right-buttons"> mdi-chevron-right </v-icon>
           </v-btn>
           <v-toolbar-title id="toolbar-title" v-if="$refs.calendar">
             {{ $refs.calendar.title }}
@@ -33,13 +33,13 @@
             transition="slide-y-transition"
             bottom
             right
-            rounded="lg"
             offset-y
           >
             <template v-slot:activator="{ on: menu }">
               <v-tooltip id="menu-tooltip" top>
                 <template v-slot:activator="{ on: tooltip, attrs }">
                   <v-btn
+                    id="ansicht-button"
                     outlined
                     color="grey darken-2"
                     v-bind="attrs"
@@ -93,9 +93,10 @@
       </v-sheet>
       <v-sheet height="600">
         <v-calendar
+          id="calendar"
           ref="calendar"
           v-model="focus"
-          color="primary"
+          color="light-green accent-4"
           :events="events"
           :event-color="getEventColor"
           :type="type"
@@ -295,6 +296,19 @@ export default {
   background-color: rgb(137, 255, 137);
 }
 
+#ansicht-button {
+  color: black !important;
+}
+
+#ansicht-button:hover {
+  color: black !important;
+  background-color: rgb(241, 237, 237);
+}
+
+.left-right-buttons {
+  color: black !important;
+}
+
 /* Toolbar */
 #toolbar-title {
   margin-left: 12px !important;
@@ -333,5 +347,10 @@ export default {
 
 .abbrechen-buttons:hover {
   background-color: darkgrey;
+}
+
+/* Calendar */
+#calendar {
+  margin-top: 2px;
 }
 </style>

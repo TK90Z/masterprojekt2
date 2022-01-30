@@ -8,7 +8,7 @@
     />
     <v-col>
       <v-sheet height="64">
-        <v-toolbar flat>
+        <v-toolbar flat class="light-blue lighten-5">
           <v-btn
             id="heute-button"
             outlined
@@ -19,16 +19,17 @@
             Heute
           </v-btn>
           <v-btn fab text small color="grey darken-2" @click="prev">
-            <v-icon small> mdi-chevron-left </v-icon>
+            <v-icon small class="left-right-buttons"> mdi-chevron-left </v-icon>
           </v-btn>
           <v-btn fab text small color="grey darken-2" @click="next">
-            <v-icon small> mdi-chevron-right </v-icon>
+            <v-icon small class="left-right-buttons"> mdi-chevron-right </v-icon>
           </v-btn>
           <v-toolbar-title id="toolbar-title" v-if="$refs.calendar">
             {{ $refs.calendar.title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-autocomplete
+            color="black"
             v-model="patient"
             :items="patients"
             item-text="name"
@@ -49,6 +50,7 @@
               <v-tooltip id="menu-tooltip" top>
                 <template v-slot:activator="{ on: tooltip, attrs }">
                   <v-btn
+                    id="ansicht-button"
                     outlined
                     color="grey darken-2"
                     v-bind="attrs"
@@ -61,7 +63,13 @@
                 <span>Ansicht ändern </span>
               </v-tooltip>
             </template>
-             <v-list ripple v-bind:class="active">
+            <v-list
+              ripple
+              v-bind:class="active"
+              rounded="lg"
+              class="text-center"
+              color="rgb(241, 237, 237)"
+            >
               <v-list-item
                 class="menu-buttons day"
                 v-on:click="makeActive('day')"
@@ -96,9 +104,10 @@
       </v-sheet>
       <v-sheet height="600">
         <v-calendar
+          id="calendar"
           ref="calendar"
           v-model="focus"
-          color="primary"
+          color="light-green accent-4"
           :events="events"
           :event-color="getEventColor"
           :type="type"
@@ -331,9 +340,9 @@ export default {
           this.selectedOpen = false;
           requestAnimationFrame(() => requestAnimationFrame(() => open()));
         } else {
-          open()
+          open();
         }
-     
+
         nativeEvent.stopPropagation();
       }
     },
