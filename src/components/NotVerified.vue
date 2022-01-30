@@ -1,3 +1,3 @@
 <template>
-    <h1>Sie sind leider noch nicht verifiziert! 😢</h1>
+    <h1>Bitte melden Sie sich an, um sich zu verifizieren und die Seite besuchen zu können.</h1>
 </template>
