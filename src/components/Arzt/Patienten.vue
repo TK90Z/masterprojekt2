@@ -29,7 +29,7 @@
             <v-spacer></v-spacer>
             <div class="alpha-sort">Alphabetisch sortieren:</div>
             <v-btn-toggle v-model="sortDesc" mandatory>
-              <v-tooltip v-model="show" bottom>
+              <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     v-on="on"
@@ -44,7 +44,7 @@
                 </template>
                 <span>aufsteigend</span>
               </v-tooltip>
-              <v-tooltip v-model="show" bottom>
+              <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     v-on="on"
@@ -582,18 +582,19 @@ export default {
     diagnosisSearch(search) {
       var newArray = [];
       this.diagnosisArray.forEach((element) => {
-        if (element.date.toLowerCase().includes(search.toLowerCase()))
+          console.log(element)
+        if (element.date && element.date.toLowerCase().includes(search.toLowerCase()))
           newArray.push(element);
-        else if (element.name.toLowerCase().includes(search.toLowerCase()))
+        else if (element.name && element.name.toLowerCase().includes(search.toLowerCase()))
           newArray.push(element);
-        else if (element.email.toLowerCase().includes(search.toLowerCase()))
+        else if (element.email && element.email.toLowerCase().includes(search.toLowerCase()))
           newArray.push(element);
-        else if (element.diagnosis.toLowerCase().includes(search.toLowerCase()))
+        else if (element.diagnosis && element.diagnosis.toLowerCase().includes(search.toLowerCase()))
           newArray.push(element);
-        else if (element.symptoms.toLowerCase().includes(search.toLowerCase()))
+        else if (element.symptoms && element.symptoms.toLowerCase().includes(search.toLowerCase()))
           newArray.push(element);
         else if (
-          element.medications.toLowerCase().includes(search.toLowerCase())
+          element.medications && this.medicationsAsString(element.medications).toLowerCase().includes(search.toLowerCase())
         )
           newArray.push(element);
       });
@@ -694,7 +695,7 @@ export default {
 }
 
 /* Buttons: */
-#seitenanzahl-button {
+/*#seitenanzahl-button {
   color: blue !important;
-}
+}*/
 </style>

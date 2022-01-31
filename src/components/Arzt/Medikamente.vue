@@ -16,7 +16,7 @@
       <template v-slot:header>
         <v-toolbar dark color="blue darken-3" class="mb-1">
           <v-text-field
-            rounded="xl"
+            rounded
             v-model="search"
             clearable
             flat
@@ -29,7 +29,7 @@
             <v-spacer></v-spacer>
             <div class="alpha-sort">Alphabetisch sortieren:</div>
             <v-btn-toggle v-model="sortDesc" mandatory>
-              <v-tooltip v-model="show" bottom>
+              <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     v-on="on"
@@ -44,7 +44,7 @@
                 </template>
                 <span>aufsteigend</span>
               </v-tooltip>
-              <v-tooltip v-model="show" bottom>
+              <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     v-on="on"
@@ -74,7 +74,7 @@
             md="4"
             lg="3"
           >
-            <v-card id="v-card" style="height: 100%" elevation="10" outlined>
+            <v-card id="v-card" style="height: 100%; display: flex; flex-direction: column;" elevation="10" outlined>
               <div
                 style="
                   display: flex;
@@ -115,7 +115,7 @@
                   </v-list-item-content>
                 </v-list-item>
                 <v-list-item>
-                  <v-list-item-content class="align-end">
+                  <v-list-item-content class="align-end max-text-lines-5">
                     {{ item.wirkung }}
                   </v-list-item-content>
                 </v-list-item>
@@ -125,6 +125,7 @@
                   width: 100%;
                   display: flex;
                   justify-content: space-between;
+                  margin-top: auto;
                 "
               >
                 <v-tooltip bottom>
@@ -132,7 +133,7 @@
                   <template v-slot:activator="{ on }">
                     <v-avatar
                       color="primary"
-                      style="margin: 10px; margin-left: auto; cursor: pointer"
+                      style="margin: 10px; margin-left: auto; cursor: pointer;"
                       v-on="on"
                       @click="inspectLeaflet(item)"
                     >
@@ -149,10 +150,10 @@
       <template v-slot:footer>
         <v-row class="mt-2" align="center" justify="center">
           <span class="grey--text items-per-page">Items per page:</span>
-          <v-menu offset-y top rounded="lg">
+          <v-menu offset-y top rounded>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                rounded="lg"
+                rounded
                 dark
                 text
                 color="primary"
@@ -164,7 +165,7 @@
                 <v-icon>mdi-chevron-down</v-icon>
               </v-btn>
             </template>
-            <v-list rounded="lg" class="text-center">
+            <v-list rounded class="text-center">
               <v-list-item
                 v-for="(number, index) in itemsPerPageArray"
                 :key="index"
@@ -288,5 +289,16 @@ export default {
 /* Cards: */
 #v-card {
   margin-top: 6px;
+}
+
+.max-text-lines-5 {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   -webkit-line-clamp: 5; /* number of lines to show */
+           line-clamp: 5; 
+   -webkit-box-orient: vertical;
+   padding-bottom: 5px !important;
+   padding-top: 5px !important;
 }
 </style>
