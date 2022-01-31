@@ -16,7 +16,7 @@
       <template v-slot:header>
         <v-toolbar dark color="blue darken-3" class="mb-1">
           <v-text-field
-            rounded="xl"
+            rounded
             v-model="search"
             clearable
             flat
@@ -164,10 +164,11 @@
       <template v-slot:footer>
         <v-row class="mt-2" align="center" justify="center">
           <span class="grey--text items-per-page">Items per page:</span>
-          <v-menu offset-y top rounded="lg">
+          <v-menu offset-y top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                rounded="lg"
+                id="seitenanzahl-button"
+                rounded
                 dark
                 text
                 color="primary"
@@ -179,7 +180,7 @@
                 <v-icon>mdi-chevron-down</v-icon>
               </v-btn>
             </template>
-            <v-list rounded="lg" class="text-center">
+            <v-list rounded class="text-center"  color="blue-grey lighten-5">
               <v-list-item
                 v-for="(number, index) in itemsPerPageArray"
                 :key="index"
@@ -690,5 +691,10 @@ export default {
 /* Diagnoseübersicht-Card: */
 .ueberschrift-uebersicht {
     font-size: 10px;
+}
+
+/* Buttons: */
+#seitenanzahl-button {
+  color: blue !important;
 }
 </style>

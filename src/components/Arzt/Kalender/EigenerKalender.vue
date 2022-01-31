@@ -55,9 +55,9 @@
             <v-list
               ripple
               v-bind:class="active"
-              rounded="lg"
+              rounded
               class="text-center"
-              color="rgb(241, 237, 237)"
+              color="blue-grey lighten-5"
             >
               <v-list-item
                 class="menu-buttons day"
