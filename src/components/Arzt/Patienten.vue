@@ -16,7 +16,7 @@
       <template v-slot:header>
         <v-toolbar dark color="blue darken-3" class="mb-1">
           <v-text-field
-            rounded="xl"
+            rounded
             v-model="search"
             clearable
             flat
@@ -29,7 +29,7 @@
             <v-spacer></v-spacer>
             <div class="alpha-sort">Alphabetisch sortieren:</div>
             <v-btn-toggle v-model="sortDesc" mandatory>
-              <v-tooltip v-model="show" bottom>
+              <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     v-on="on"
@@ -44,7 +44,7 @@
                 </template>
                 <span>aufsteigend</span>
               </v-tooltip>
-              <v-tooltip v-model="show" bottom>
+              <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     v-on="on"
@@ -164,10 +164,10 @@
       <template v-slot:footer>
         <v-row class="mt-2" align="center" justify="center">
           <span class="grey--text items-per-page">Items per page:</span>
-          <v-menu offset-y top rounded="lg">
+          <v-menu offset-y top rounded>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                rounded="lg"
+                rounded
                 dark
                 text
                 color="primary"
@@ -179,7 +179,7 @@
                 <v-icon>mdi-chevron-down</v-icon>
               </v-btn>
             </template>
-            <v-list rounded="lg" class="text-center">
+            <v-list rounded class="text-center">
               <v-list-item
                 v-for="(number, index) in itemsPerPageArray"
                 :key="index"
@@ -581,18 +581,19 @@ export default {
     diagnosisSearch(search) {
       var newArray = [];
       this.diagnosisArray.forEach((element) => {
-        if (element.date.toLowerCase().includes(search.toLowerCase()))
+          console.log(element)
+        if (element.date && element.date.toLowerCase().includes(search.toLowerCase()))
           newArray.push(element);
-        else if (element.name.toLowerCase().includes(search.toLowerCase()))
+        else if (element.name && element.name.toLowerCase().includes(search.toLowerCase()))
           newArray.push(element);
-        else if (element.email.toLowerCase().includes(search.toLowerCase()))
+        else if (element.email && element.email.toLowerCase().includes(search.toLowerCase()))
           newArray.push(element);
-        else if (element.diagnosis.toLowerCase().includes(search.toLowerCase()))
+        else if (element.diagnosis && element.diagnosis.toLowerCase().includes(search.toLowerCase()))
           newArray.push(element);
-        else if (element.symptoms.toLowerCase().includes(search.toLowerCase()))
+        else if (element.symptoms && element.symptoms.toLowerCase().includes(search.toLowerCase()))
           newArray.push(element);
         else if (
-          element.medications.toLowerCase().includes(search.toLowerCase())
+          element.medications && this.medicationsAsString(element.medications).toLowerCase().includes(search.toLowerCase())
         )
           newArray.push(element);
       });
