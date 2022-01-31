@@ -26,7 +26,7 @@
           </v-card>
         </template>
       </v-dialog>
-      <v-btn rounded tile @click="logout" class="top-menu-buttons">
+      <v-btn tile @click="logout" class="top-menu-buttons">
         Abmelden
         <v-icon right>
           mdi-logout
