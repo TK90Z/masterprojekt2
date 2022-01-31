@@ -27,7 +27,7 @@
                                     vergessen?
                                 </v-card-text>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" @click.stop="login">Anmelden</v-btn>
+                                <v-btn rounded color="primary" @click.stop="login">Anmelden</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-flex>
