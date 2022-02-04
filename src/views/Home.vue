@@ -62,17 +62,18 @@
         <v-icon right> mdi-logout </v-icon>
       </v-btn>
     </v-toolbar>
-    <v-navigation-drawer v-model="drawer" absolute temporary>
+    <v-navigation-drawer class="blue accent-3" v-model="drawer" absolute temporary>
       <div v-if="rights == 1 || rights == 4">
-        <v-card-text>Patient</v-card-text>
-        <v-list dense>
-          <v-list-item
+        <v-card-text class="font-weight-bold card-texts">Patient</v-card-text>
+        <v-list dense color="blue accent-3">
+          <v-divider class="dividers" color="white"></v-divider>
+          <v-list-item class="navigator-items"
             v-for="item in patientItems"
             :key="item.title"
             :to="item.link"
           >
             <v-list-item-icon>
-              <v-icon>{{ item.icon }}</v-icon>
+              <v-icon class="navigator-icons">{{ item.icon }}</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>{{ item.title }} </v-list-item-title>
@@ -82,15 +83,16 @@
       </div>
 
       <div v-if="rights == 2 || rights == 4">
-        <v-card-text>Arzt</v-card-text>
-        <v-list dense>
-          <v-list-item
+        <v-card-text class="font-weight-bold card-texts">Arzt</v-card-text>
+        <v-list dense color="blue accent-3">
+          <v-divider class="dividers" color="white"></v-divider>
+          <v-list-item class="navigator-items"
             v-for="item in docItems"
             :key="item.title"
             :to="item.link"
           >
             <v-list-item-icon>
-              <v-icon>{{ item.icon }}</v-icon>
+              <v-icon class="navigator-icons">{{ item.icon }}</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
@@ -101,15 +103,16 @@
       </div>
 
       <div v-if="rights == 3 || rights == 4">
-        <v-card-text>Admin</v-card-text>
-        <v-list dense>
-          <v-list-item
+        <v-card-text class="font-weight-bold card-texts">Admin</v-card-text>
+        <v-list dense color="blue accent-3">
+          <v-divider class="dividers" color="white"></v-divider>
+          <v-list-item class="navigator-items"
             v-for="item in adminItems"
             :key="item.title"
             :to="item.link"
           >
             <v-list-item-icon>
-              <v-icon>{{ item.icon }}</v-icon>
+              <v-icon class="navigator-icons">{{ item.icon }}</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>{{ item.title }} </v-list-item-title>
@@ -229,6 +232,9 @@ export default {
     logout() {
       const auth = getAuth();
       signOut(auth).then(() => {});
+    },
+    makeActive(item) {
+      this.active = item;
     }
   },
 };
@@ -264,5 +270,35 @@ export default {
 /* Cards: */
 #pb-text {
   margin-top: 12px;
+}
+
+.card-texts {
+  font-size: 20px !important;
+  color: white !important;
+  background-color: #2979FF;
+}
+
+/* Navigator: */
+.navigator-items {
+  margin-top: 4px;
+  color: white !important;
+}
+
+.navigator-items:hover {
+  background-color: #42A5F5;
+}
+
+.navigator-icons {
+  color: white;
+}
+
+.v-list-item--active {
+  background-color: white;
+  color: #2979FF !important;
+}
+
+.dividers {
+  margin-top: -5px;
+  margin-bottom: 11px;
 }
 </style>
