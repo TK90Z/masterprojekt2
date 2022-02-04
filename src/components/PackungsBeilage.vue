@@ -7,7 +7,7 @@
       hide-overlay
     >
       <template v-slot:default="dialog">
-        <v-card>
+        <v-card class="light-blue lighten-5">
           <v-toolbar dark color="primary">
             <v-btn class="x-buttons" small icon @click="dialog.value = false">
               <v-icon>mdi-close</v-icon>
@@ -15,7 +15,7 @@
             <v-toolbar-title>{{ leaflet.name }}</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
-          <v-form ref="form" @submit.prevent="submit">
+          <v-form class="light-blue lighten-5" ref="form" @submit.prevent="submit">
             <v-expansion-panels>
               <v-expansion-panel
                 v-for="(key, index) in sortedLeaflet"
