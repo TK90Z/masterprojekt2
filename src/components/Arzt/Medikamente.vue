@@ -74,7 +74,12 @@
             md="4"
             lg="3"
           >
-            <v-card id="v-card" style="height: 100%; display: flex; flex-direction: column;" elevation="10" outlined>
+            <v-card
+              id="v-card"
+              style="height: 100%; display: flex; flex-direction: column"
+              elevation="10"
+              outlined
+            >
               <div
                 style="
                   display: flex;
@@ -103,19 +108,19 @@
 
               <v-list dense>
                 <v-list-item>
-                  <v-list-item-content> Form: </v-list-item-content>
+                  <v-list-item-content class="font-weight-medium"> Form: </v-list-item-content>
                   <v-list-item-content class="align-end">
                     {{ item.darreichungsform }}
                   </v-list-item-content>
                 </v-list-item>
                 <v-list-item>
-                  <v-list-item-content> Menge: </v-list-item-content>
+                  <v-list-item-content class="font-weight-medium"> Menge: </v-list-item-content>
                   <v-list-item-content class="align-end">
                     {{ item.info }}
                   </v-list-item-content>
                 </v-list-item>
                 <v-list-item>
-                  <v-list-item-content class="align-end max-text-lines-5">
+                  <v-list-item-content id="med-wirkung" class="align-end max-text-lines-6 text-justify">
                     {{ item.wirkung }}
                   </v-list-item-content>
                 </v-list-item>
@@ -133,7 +138,7 @@
                   <template v-slot:activator="{ on }">
                     <v-avatar
                       color="primary"
-                      style="margin: 10px; margin-left: auto; cursor: pointer;"
+                      style="margin: 10px; margin-left: auto; cursor: pointer"
                       v-on="on"
                       @click="inspectLeaflet(item)"
                     >
@@ -150,9 +155,10 @@
       <template v-slot:footer>
         <v-row class="mt-2" align="center" justify="center">
           <span class="grey--text items-per-page">Items per page:</span>
-          <v-menu offset-y top rounded>
+          <v-menu offset-y top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
+                id="seitenanzahl-button"
                 rounded
                 dark
                 text
@@ -160,13 +166,21 @@
                 class="ml-2 items-per-page"
                 v-bind="attrs"
                 v-on="on"
+                @click="show = !show"
               >
                 {{ itemsPerPage }}
-                <v-icon>mdi-chevron-down</v-icon>
+                <v-icon>{{
+                  !show ? "mdi-chevron-up" : "mdi-chevron-down"
+                }}</v-icon>
               </v-btn>
             </template>
-            <v-list rounded class="text-center">
+            <v-list
+              rounded
+              class="text-center"
+              color="blue-grey lighten-5"
+            >
               <v-list-item
+                class="pages-count"
                 v-for="(number, index) in itemsPerPageArray"
                 :key="index"
                 @click="updateItemsPerPage(number)"
@@ -213,6 +227,7 @@ import PackungsBeilage from "../../components/PackungsBeilage";
 export default {
   data() {
     return {
+      show: false,
       leaflet: null,
       leafletDialog: false,
       itemsPerPageArray: [4, 8, 12],
@@ -292,13 +307,19 @@ export default {
 }
 
 .max-text-lines-5 {
-   overflow: hidden;
-   text-overflow: ellipsis;
-   display: -webkit-box;
-   -webkit-line-clamp: 5; /* number of lines to show */
-           line-clamp: 5; 
-   -webkit-box-orient: vertical;
-   padding-bottom: 5px !important;
-   padding-top: 5px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* number of lines to show */
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  padding-bottom: 5px !important;
+  padding-top: 5px !important;
+}
+</style>
+
+<style scoped>
+#med-wirkung {
+  font-size: 14px;
 }
 </style>

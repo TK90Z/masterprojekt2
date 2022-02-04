@@ -74,7 +74,12 @@
             md="4"
             lg="3"
           >
-            <v-card id="v-card" style="height: 100%" elevation="10" outlined class="white">
+            <v-card
+              id="v-card"
+              style="height: 100%"
+              elevation="10"
+              outlined
+            >
               <div
                 style="
                   display: flex;
@@ -104,19 +109,19 @@
 
               <v-list dense>
                 <v-list-item>
-                  <v-list-item-content> Alter: </v-list-item-content>
+                  <v-list-item-content class="font-weight-medium"> Alter: </v-list-item-content>
                   <v-list-item-content class="align-end">
                     {{ item.age }}
                   </v-list-item-content>
                 </v-list-item>
                 <v-list-item>
-                  <v-list-item-content> Geschlecht: </v-list-item-content>
+                  <v-list-item-content class="font-weight-medium"> Geschlecht: </v-list-item-content>
                   <v-list-item-content class="align-end">
                     {{ item.sex }}
                   </v-list-item-content>
                 </v-list-item>
                 <v-list-item>
-                  <v-list-item-content> Versicherung: </v-list-item-content>
+                  <v-list-item-content class="font-weight-medium"> Versicherung: </v-list-item-content>
                   <v-list-item-content class="align-end">
                     {{ item.insurance }}
                   </v-list-item-content>
@@ -175,13 +180,17 @@
                 class="ml-2 items-per-page"
                 v-bind="attrs"
                 v-on="on"
+                @click="show = !show"
               >
                 {{ itemsPerPage }}
-                <v-icon>mdi-chevron-down</v-icon>
+                <v-icon>{{
+                  !show ? "mdi-chevron-up" : "mdi-chevron-down"
+                }}</v-icon>
               </v-btn>
             </template>
-            <v-list rounded class="text-center"  color="blue-grey lighten-5">
+            <v-list rounded class="text-center" color="blue-grey lighten-5">
               <v-list-item
+                class="pages-count"
                 v-for="(number, index) in itemsPerPageArray"
                 :key="index"
                 @click="updateItemsPerPage(number)"
@@ -227,7 +236,17 @@
     >
       <template>
         <v-card class="light-blue lighten-5">
-          <v-toolbar color="primary" dark>Neue Diagnose erstellen</v-toolbar>
+          <v-toolbar color="primary" dark>
+            <v-btn
+              class="x-buttons"
+              small
+              icon
+              @click="addDiagnosisDialog = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-toolbar-title>Diagnose erstellen</v-toolbar-title>
+          </v-toolbar>
           <v-card-text>
             <p></p>
             <v-text-field
@@ -277,7 +296,13 @@
             ></v-textarea>
           </v-card-text>
           <v-card-actions class="justify-end">
-            <v-btn :disabled="symptomsIsEmpty" @click="medicationDetails" text
+            <v-btn
+              class="erstellen-buttons"
+              rounded
+              outlined
+              :disabled="diagnosisIsEmpty"
+              @click="medicationDetails"
+              text
               >Abschicken</v-btn
             >
           </v-card-actions>
@@ -310,29 +335,37 @@
               <template v-slot:default="{ item }">
                 <v-list-item>
                   <v-list-item-content>
-                      <div class="ueberschrift-uebersicht">Datum</div>
-                    <v-list-item-title class="font-weight-medium">{{ item.date }}</v-list-item-title>
+                    <div class="ueberschrift-uebersicht">Datum</div>
+                    <v-list-item-title class="font-weight-medium">{{
+                      item.date
+                    }}</v-list-item-title>
                   </v-list-item-content>
 
                   <v-list-item-content>
-                      <div class="ueberschrift-uebersicht">Diagnose</div>
-                    <v-list-item-title class="font-weight-medium">{{ item.diagnosis }}</v-list-item-title>
+                    <div class="ueberschrift-uebersicht">Diagnose</div>
+                    <v-list-item-title class="font-weight-medium">{{
+                      item.diagnosis
+                    }}</v-list-item-title>
                   </v-list-item-content>
 
                   <v-list-item-content>
-                      <div class="ueberschrift-uebersicht">Medikamente</div>
+                    <div class="ueberschrift-uebersicht">Medikamente</div>
                     <v-list-item-title class="font-weight-medium"
                       >{{ medicationsAsString(item.medications) }}
                     </v-list-item-title>
                   </v-list-item-content>
 
                   <v-list-item-action>
-                    <v-btn small @click="openDiagnosis(item)" rounded>
+                    <v-btn
+                      id="oeffnen-button"
+                      small
+                      @click="openDiagnosis(item)"
+                      rounded
+                      outlined
+                    >
                       Öffnen
 
-                      <v-icon color="green" right>
-                        mdi-open-in-new
-                      </v-icon>
+                      <v-icon color="green" right> mdi-open-in-new </v-icon>
                     </v-btn>
                   </v-list-item-action>
                 </v-list-item>
@@ -341,7 +374,12 @@
             <v-divider></v-divider>
           </v-card-text>
           <v-card-actions class="justify-end">
-            <v-btn @click="inspectDiagnosisDialog = false" text
+            <v-btn
+              @click="inspectDiagnosisDialog = false"
+              class="abbrechen-buttons"
+              rounded
+              outlined
+              text
               >Schließen</v-btn
             >
           </v-card-actions>
@@ -356,9 +394,19 @@
     >
       <template>
         <v-card class="light-blue lighten-5">
-          <v-toolbar color="primary" dark>Diagnoseinformationen</v-toolbar>
+          <v-toolbar color="primary" dark>
+            <v-btn
+              class="x-buttons"
+              small
+              icon
+              @click="openDiagnosisDialog = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-toolbar-title>Diagnoseinformationen</v-toolbar-title>
+          </v-toolbar>
           <v-card-text>
-              <p></p>
+            <p></p>
             <v-text-field
               v-model="openedDiagnosis.date"
               :value="today"
@@ -402,7 +450,14 @@
             ></v-textarea>
           </v-card-text>
           <v-card-actions class="justify-end">
-            <v-btn @click="openDiagnosisDialog = false" text>Schließen</v-btn>
+            <v-btn
+              @click="openDiagnosisDialog = false"
+              class="abbrechen-buttons"
+              rounded
+              outlined
+              text
+              >Schließen</v-btn
+            >
           </v-card-actions>
         </v-card>
       </template>
@@ -456,7 +511,7 @@
             </v-menu>
           </v-card-text>
           <v-card-actions class="justify-end">
-            <v-btn @click="medicationDetails" text :disabled="allSet"
+            <v-btn rounded outlined class="erstellen-buttons" @click="medicationDetails" text :disabled="allSet"
               >Fertig</v-btn
             >
           </v-card-actions>
@@ -472,6 +527,7 @@ import NotAvailable from "../../components/NotAvailable";
 export default {
   data() {
     return {
+      show: false,
       activePicker: null,
       menu: false,
       medicationDialog: false,
@@ -571,8 +627,8 @@ export default {
         return true;
       }
     },
-    symptomsIsEmpty() {
-      return !this.newDiagnosis.symptoms || this.newDiagnosis.symptoms == "";
+    diagnosisIsEmpty() {
+      return !this.newDiagnosis.diagnosis || this.newDiagnosis.diagnosis == "";
     },
   },
   watch: {
@@ -582,19 +638,37 @@ export default {
     diagnosisSearch(search) {
       var newArray = [];
       this.diagnosisArray.forEach((element) => {
-          console.log(element)
-        if (element.date && element.date.toLowerCase().includes(search.toLowerCase()))
-          newArray.push(element);
-        else if (element.name && element.name.toLowerCase().includes(search.toLowerCase()))
-          newArray.push(element);
-        else if (element.email && element.email.toLowerCase().includes(search.toLowerCase()))
-          newArray.push(element);
-        else if (element.diagnosis && element.diagnosis.toLowerCase().includes(search.toLowerCase()))
-          newArray.push(element);
-        else if (element.symptoms && element.symptoms.toLowerCase().includes(search.toLowerCase()))
+        console.log(element);
+        if (
+          element.date &&
+          element.date.toLowerCase().includes(search.toLowerCase())
+        )
           newArray.push(element);
         else if (
-          element.medications && this.medicationsAsString(element.medications).toLowerCase().includes(search.toLowerCase())
+          element.name &&
+          element.name.toLowerCase().includes(search.toLowerCase())
+        )
+          newArray.push(element);
+        else if (
+          element.email &&
+          element.email.toLowerCase().includes(search.toLowerCase())
+        )
+          newArray.push(element);
+        else if (
+          element.diagnosis &&
+          element.diagnosis.toLowerCase().includes(search.toLowerCase())
+        )
+          newArray.push(element);
+        else if (
+          element.symptoms &&
+          element.symptoms.toLowerCase().includes(search.toLowerCase())
+        )
+          newArray.push(element);
+        else if (
+          element.medications &&
+          this.medicationsAsString(element.medications)
+            .toLowerCase()
+            .includes(search.toLowerCase())
         )
           newArray.push(element);
       });
@@ -689,13 +763,33 @@ export default {
 </script>
 
 <style>
-/* Diagnoseübersicht-Card: */
+/* Diagnosenübersicht-Card: */
 .ueberschrift-uebersicht {
-    font-size: 10px;
+  font-size: 10px;
 }
 
 /* Buttons: */
-/*#seitenanzahl-button {
-  color: blue !important;
-}*/
+.x-buttons {
+  margin-left: 1px !important;
+}
+
+.x-buttons:hover {
+  background-color: #e26563;
+}
+
+#oeffnen-button {
+  border-color: transparent !important;
+  background-color: #e0e0e0;
+}
+
+#oeffnen-button:hover {
+  border-color: green !important;
+  background-color: #CCFF90 /*b2ff59*/;
+}
+
+/* Listen: */
+.pages-count:hover {
+  color: white !important;
+  background-color: rgb(57, 151, 240);
+}
 </style>

@@ -131,21 +131,25 @@
                 <template>
                   <v-card>
                     <v-toolbar color="primary" dark>Termin löschen</v-toolbar>
-                    <v-card-text id="loeschen-card">
+                    <v-card-text class="loeschen-card">
                       Wollen Sie diesen Termin wirklich löschen?
                     </v-card-text>
                     <v-card-actions class="justify-end">
                       <v-btn
-                        id="loeschen-card-loeschen"
+                        class="abbrechen-buttons"
+                        rounded
+                        outlined
                         text
                         @click="deleteEvent"
                         >Löschen</v-btn
                       >
                       <v-btn
-                        class="abbrechen-buttons"
+                        class="erstellen-buttons"
+                        rounded
+                        outlined
                         text
                         @click="deleteDialog = false"
-                        >Abbrechen</v-btn
+                        >Zurück</v-btn
                       >
                     </v-card-actions>
                   </v-card>
@@ -158,11 +162,12 @@
             <v-card-actions class="justify-end">
               <v-btn
                 class="abbrechen-buttons"
+                rounded
+                outlined
                 text
-                color="secondary"
                 @click="selectedOpen = false"
               >
-                Abbrechen
+                Schließen
               </v-btn>
             </v-card-actions>
           </v-card>

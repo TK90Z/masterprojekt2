@@ -64,15 +64,15 @@
                   </v-btn>
                 </template>
                 <template>
-                  <v-card>
+                  <v-card v-model="selectedOpen">
                     <v-toolbar color="primary" dark>Termin löschen</v-toolbar>
                     <v-card-text>
                       Wollen Sie diesen Termin wirklich löschen?
                     </v-card-text>
                     <v-card-actions class="justify-end">
                       <v-btn text @click="deleteEvent">Löschen</v-btn>
-                      <v-btn text @click="deleteDialog = false">Abbrechen</v-btn>
-                    </v-card-actions>
+                      <v-btn text @click="selectedOpen = false">Abbrechen</v-btn>
+                    </v-card-actions> 
                   </v-card>
                 </template>
               </v-dialog>
