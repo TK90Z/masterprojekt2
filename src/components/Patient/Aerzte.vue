@@ -1,5 +1,9 @@
 <template>
-  <v-container fluid v-if="rights == 1 || rights == 4">
+  <v-container
+    class="light-blue lighten-5"
+    fluid
+    v-if="rights == 1 || rights == 4"
+  >
     <v-data-iterator
       :items="allDoctors"
       :items-per-page.sync="itemsPerPage"
@@ -12,23 +16,49 @@
       <template v-slot:header>
         <v-toolbar dark color="blue darken-3" class="mb-1">
           <v-text-field
+            rounded
             v-model="search"
             clearable
             flat
             solo-inverted
             hide-details
             prepend-inner-icon="mdi-magnify"
-            label="Search"
+            label="Suche"
           ></v-text-field>
           <template v-if="$vuetify.breakpoint.mdAndUp">
             <v-spacer></v-spacer>
+            <div class="alpha-sort">Alphabetisch sortieren:</div>
             <v-btn-toggle v-model="sortDesc" mandatory>
-              <v-btn large depressed color="blue" :value="false">
-                <v-icon>mdi-arrow-up</v-icon>
-              </v-btn>
-              <v-btn large depressed color="blue" :value="true">
-                <v-icon>mdi-arrow-down</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    v-on="on"
+                    elevation="3"
+                    small
+                    depressed
+                    color="blue"
+                    :value="false"
+                  >
+                    <v-icon small>mdi-arrow-up</v-icon>
+                  </v-btn>
+                </template>
+                <span>aufsteigend</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    v-on="on"
+                    elevation="3"
+                    small
+                    depressed
+                    color="blue"
+                    :value="true"
+                  >
+                    <v-icon small>mdi-arrow-down</v-icon>
+                  </v-btn>
+                </template>
+                <span>absteigend</span>
+              </v-tooltip>
             </v-btn-toggle>
           </template>
         </v-toolbar>
@@ -44,7 +74,7 @@
             md="4"
             lg="3"
           >
-            <v-card style="height: 100%">
+            <v-card id="v-card" style="height: 100%" elevation="10" outlined>
               <div
                 style="
                   display: flex;
@@ -75,7 +105,9 @@
 
               <v-list dense>
                 <v-list-item>
-                  <v-list-item-content> Fachrichtung(en): </v-list-item-content>
+                  <v-list-item-content class="font-weight-medium">
+                    Fachrichtung(en):
+                  </v-list-item-content>
                   <v-list-item-content class="align-end">
                     {{ item.subjectAreaString }}
                   </v-list-item-content>
@@ -90,9 +122,9 @@
                 :value="item.avgRating"
               >
               </v-rating>
-              <p
+              <p id="bewertung"
                 v-if="notMyDoctor(item.patients)"
-                class="clickable-text"
+                class="clickable-text text-decoration-none"
                 @click="startRateDialog(item)"
               >
                 Bewertung abgeben
@@ -104,23 +136,29 @@
 
       <template v-slot:footer>
         <v-row class="mt-2" align="center" justify="center">
-          <span class="grey--text">Items per page</span>
+          <span class="grey--text items-per-page">Items per page</span>
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
+                id="seitenanzahl-button"
+                rounded
                 dark
                 text
                 color="primary"
-                class="ml-2"
+                class="ml-2 items-per-page"
                 v-bind="attrs"
                 v-on="on"
+                @click="show = !show"
               >
                 {{ itemsPerPage }}
-                <v-icon>mdi-chevron-down</v-icon>
+                <v-icon>{{
+                  !show ? "mdi-chevron-up" : "mdi-chevron-down"
+                }}</v-icon>
               </v-btn>
             </template>
-            <v-list>
+            <v-list rounded class="text-center" color="blue-grey lighten-5">
               <v-list-item
+                class="pages-count"
                 v-for="(number, index) in itemsPerPageArray"
                 :key="index"
                 @click="updateItemsPerPage(number)"
@@ -132,19 +170,27 @@
 
           <v-spacer></v-spacer>
 
-          <span class="mr-4 grey--text">
+          <span class="mr-4 grey--text page-buttons">
             Page {{ page }} of {{ numberOfPages }}
           </span>
           <v-btn
+            small
             fab
             dark
             color="blue darken-3"
-            class="mr-1"
+            class="mr-1 page-buttons"
             @click="formerPage"
           >
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
-          <v-btn fab dark color="blue darken-3" class="ml-1" @click="nextPage">
+          <v-btn
+            small
+            fab
+            dark
+            color="blue darken-3"
+            class="ml-1 page-buttons"
+            @click="nextPage"
+          >
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
         </v-row>
@@ -156,12 +202,12 @@
       max-width="600"
     >
       <template>
-        <v-card>
+        <v-card class="light-blue lighten-5">
           <v-toolbar color="primary" dark
             >Bewerten Sie hier Ihren Arzt.</v-toolbar
           >
           <v-card-text>
-            <v-rating
+            <v-rating id="doc-rating"
               v-model="rateDoctorValue"
               color="amber lighten-1"
               half-increments
@@ -173,6 +219,14 @@
             </v-rating>
           </v-card-text>
           <v-card-actions class="justify-end">
+            <v-btn
+              @click="rateDoctorDialog = false"
+              class="abbrechen-buttons"
+              rounded
+              outlined
+              text
+              >Abbrechen</v-btn
+            >
             <v-btn id="rate-button" rounded outlined text @click="rateDoctor"
               >Abschicken</v-btn
             >
@@ -189,6 +243,7 @@ import NotAvailable from "../../components/NotAvailable";
 export default {
   data() {
     return {
+      show: false,
       rateDoctorDialog: false,
       rateDoctorUid: null,
       rateDoctorValue: 0,
@@ -325,5 +380,47 @@ export default {
 #rate-button:hover {
   background-color: #2979ff;
   color: white !important;
+}
+</style>
+
+<style>
+/* Diagnosenübersicht-Card: */
+.ueberschrift-uebersicht {
+  font-size: 10px;
+}
+
+/* Buttons: */
+.x-buttons {
+  margin-left: 1px !important;
+}
+
+.x-buttons:hover {
+  background-color: #e26563;
+}
+
+#oeffnen-button {
+  border-color: transparent !important;
+  background-color: #e0e0e0;
+}
+
+#oeffnen-button:hover {
+  border-color: green !important;
+  background-color: #CCFF90 /*b2ff59*/;
+}
+
+/* Listen: */
+.pages-count:hover {
+  color: white !important;
+  background-color: rgb(57, 151, 240);
+}
+
+/* Rating: */
+#doc-rating {
+  margin-top: 12px;
+}
+
+#bewertung:hover {
+  font-weight: bold;
+  text-decoration: underline !important;
 }
 </style>

@@ -129,7 +129,7 @@
                   </v-btn>
                 </template>
                 <template>
-                  <v-card>
+                  <v-card class="light-blue lighten-5">
                     <v-toolbar color="primary" dark>Termin löschen</v-toolbar>
                     <v-card-text class="loeschen-card">
                       Wollen Sie diesen Termin wirklich löschen?

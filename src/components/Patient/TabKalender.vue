@@ -1,16 +1,17 @@
 <template>
-  <v-card v-if="rights == 1 || rights == 4">
+  <v-card class="light-blue lighten-5" v-if="rights == 1 || rights == 4">
     <v-tabs
       v-model="tab"
       background-color="transparent"
       centered
       icons-and-text
+      id="tabs"
     >
       <v-tabs-slider></v-tabs-slider>
       <v-tooltip bottom>
-        <p class="mb-0">Hier können Sie all ihre Termine hinzufügen, egal ob</p>
-        <p class="mb-0">private Treffen oder wichtige Arzttermmine. (Nur Sie</p>
-        <p class="mb-0">sehen diese Ansicht.)</p>
+        <p class="mb-0">Hier können Sie all ihre Termine hinzufügen, </p>
+        <p class="mb-0">egal ob private Treffen oder wichtige </p>
+        <p class="mb-0">Arzttermmine. (Nur Sie sehen diese Ansicht.) </p>
         <template v-slot:activator="{ on }">
           <v-tab
             ripple
@@ -20,35 +21,35 @@
             style="margin-left: auto"
           >
             <div>Eigene Termine</div>
-            <v-icon>mdi-calendar</v-icon>
+            <v-icon class="tab-icon">mdi-calendar</v-icon>
           </v-tab>
         </template>
       </v-tooltip>
       <v-tooltip bottom>
-        <p class="mb-0">Hier können Sie einen neuen Termin für einen</p>
-        <p class="mb-0">Arztbesuch buchen. Wählen Sie den Arzt,</p>
-        <p class="mb-0">einen Tag und die Uhrzeit aus. Ihr Termin</p>
-        <p class="mb-0">erscheint zunächst in "Unbestaetigte Termine".</p>
-        <p class="mb-0">Bestätigte Termine finden Sie dann in "Eigene</p>
-        <p class="mb-0">Termine".</p>
+        <p class="mb-0">Hier können Sie einen neuen Termin für einen </p>
+        <p class="mb-0">Arztbesuch buchen. Wählen Sie den Arzt, </p>
+        <p class="mb-0">einen Tag und die Uhrzeit aus. Ihr Termin </p>
+        <p class="mb-0">erscheint nach Bestätigung des Artzes in </p>
+        <p class="mb-0">ihrem Kalender.</p>
         <template v-slot:activator="{ on }">
           <v-tab ripple v-on="on" @click="tab = 1" class="home-custom-tab">
             <div>Termin buchen</div>
-            <v-icon>mdi-calendar-edit</v-icon>
+            <v-icon class="tab-icon">mdi-calendar-edit</v-icon>
           </v-tab>
         </template>
       </v-tooltip>
       <v-tooltip bottom>
-        <p class="mb-0">Hier finden Sie ihre gebuchten, aber noch </p>
-        <p class="mb-0">unbestätigten Termine. Wenn der Arzt </p>
-        <p class="mb-0">diese bestätigt hat, erscheinen sie in </p>
-        <p class="mb-0">"Eigene Termine". </p>
+        <p class="mb-0">Hier finden Sie ihre gebuchten Termine, falls </p>
+        <p class="mb-0">der Arzt diese bestätigt hat. Zudem finden Sie </p>
+        <p class="mb-0">hier die vom Arzt für Sie gebuchten Termine, </p>
+        <p class="mb-0">welche Sie bestätigen oder ablehnen können. </p>
         <template v-slot:activator="{ on }">
           <v-tab
             ripple
             v-on="on"
             @click="tab = 2"
             class="home-custom-tab"
+            id="unbestaetigt-tab"
             style="margin-right: auto"
           >
             <v-badge
@@ -57,7 +58,7 @@
               >Unbestaetigte Termine
             </v-badge>
             <div v-else>Unbestaetigte Termine</div>
-            <v-icon>mdi-calendar-question</v-icon>
+            <v-icon class="tab-icon">mdi-calendar-question</v-icon>
           </v-tab>
         </template>
       </v-tooltip>
@@ -138,13 +139,40 @@ export default {
 </script>
 
 <style scoped>
+/* Tooltips */
+.v-tooltip__content {
+    font-size: 12px !important;
+    line-height: 1.2;
+}
+
+/* Icons */
+.tab-icon {
+  padding-bottom: 4px;
+}
+
+/* Tabs */
 .home-custom-tab {
   color: black !important;
+  border-radius: 8px;
 }
-</style>
-<style>
+
+.home-custom-tab:hover {
+  background-color: rgb(202, 200, 200);
+  border-radius: 8px;
+}
+
+#tabs {
+  padding-top: 5px;
+  padding-bottom: 25px;
+}
+
 .v-tabs-slider-wrapper {
   color: #007bff;
   height: 4px !important;
+}
+
+#unbestaetigt-tab {
+  min-width: 240px;
+  align-content: center;
 }
 </style>

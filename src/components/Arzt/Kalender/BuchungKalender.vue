@@ -18,11 +18,13 @@
           >
             Heute
           </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="prev">
+          <v-btn fab text small color="grey darken-3" @click="prev">
             <v-icon small class="left-right-buttons"> mdi-chevron-left </v-icon>
           </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="next">
-            <v-icon small class="left-right-buttons"> mdi-chevron-right </v-icon>
+          <v-btn fab text small color="grey darken-3" @click="next">
+            <v-icon small class="left-right-buttons">
+              mdi-chevron-right
+            </v-icon>
           </v-btn>
           <v-toolbar-title id="toolbar-title" v-if="$refs.calendar">
             {{ $refs.calendar.title }}
@@ -149,7 +151,7 @@
                   </v-btn>
                 </template>
                 <template>
-                  <v-card>
+                  <v-card class="light-blue lighten-5">
                     <v-toolbar color="primary" dark>Termin löschen</v-toolbar>
                     <v-card-text class="loeschen-card">
                       Wollen Sie diesen Termin wirklich löschen?
