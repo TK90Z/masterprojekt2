@@ -45,14 +45,14 @@
                             <v-expansion-panel-header>{{ capitalizeFirstLetter(index3) }}</v-expansion-panel-header>
                             <v-expansion-panel-content>
                               <template v-if="Array.isArray(key3)">
-                          <v-list disabled>
-                            <v-list-item v-for="(item3, i3) in key3" :key="i3">
-                              <v-list-item-content>
-                                <v-list-item-title v-text="item3"></v-list-item-title>
-                              </v-list-item-content>
-                            </v-list-item>
-                          </v-list>
-                        </template>
+                                <v-list disabled>
+                                  <v-list-item v-for="(item3, i3) in key3" :key="i3">
+                                    <v-list-item-content>
+                                      <v-list-item-title v-text="item3"></v-list-item-title>
+                                    </v-list-item-content>
+                                  </v-list-item>
+                                </v-list>
+                              </template>
                               <p v-else>{{ key }}</p>
                             </v-expansion-panel-content>
                           </v-expansion-panel>
