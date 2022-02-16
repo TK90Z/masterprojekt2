@@ -18,11 +18,13 @@
           >
             Heute
           </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="prev">
+          <v-btn fab text small color="grey darken-3" @click="prev">
             <v-icon small class="left-right-buttons"> mdi-chevron-left </v-icon>
           </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="next">
-            <v-icon small class="left-right-buttons"> mdi-chevron-right </v-icon>
+          <v-btn fab text small color="grey darken-3" @click="next">
+            <v-icon small class="left-right-buttons">
+              mdi-chevron-right
+            </v-icon>
           </v-btn>
           <v-toolbar-title id="toolbar-title" v-if="$refs.calendar">
             {{ $refs.calendar.title }}
@@ -66,9 +68,9 @@
             <v-list
               ripple
               v-bind:class="active"
-              rounded="lg"
+              rounded
               class="text-center"
-              color="rgb(241, 237, 237)"
+              color="blue-grey lighten-5"
             >
               <v-list-item
                 class="menu-buttons day"
@@ -149,23 +151,27 @@
                   </v-btn>
                 </template>
                 <template>
-                  <v-card>
+                  <v-card class="light-blue lighten-5">
                     <v-toolbar color="primary" dark>Termin löschen</v-toolbar>
-                    <v-card-text id="loeschen-card">
+                    <v-card-text class="loeschen-card">
                       Wollen Sie diesen Termin wirklich löschen?
                     </v-card-text>
                     <v-card-actions class="justify-end">
                       <v-btn
-                        id="loeschen-card-loeschen"
+                        class="abbrechen-buttons"
+                        rounded
+                        outlined
                         text
                         @click="deleteEvent"
                         >Löschen</v-btn
                       >
                       <v-btn
-                        class="abbrechen-buttons"
+                        class="erstellen-buttons"
+                        rounded
+                        outlined
                         text
                         @click="deleteDialog = false"
-                        >Abbrechen</v-btn
+                        >Zurück</v-btn
                       >
                     </v-card-actions>
                   </v-card>
@@ -178,11 +184,12 @@
             <v-card-actions class="justify-end">
               <v-btn
                 class="abbrechen-buttons"
+                rounded
+                outlined
                 text
-                color="secondary"
                 @click="selectedOpen = false"
               >
-                Abbrechen
+                Schließen
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -363,5 +370,10 @@ export default {
 
 .autocomplete_patient {
   margin-right: 15px;
+}
+
+/* Cards (für alle 3 Kalender in "Arzt"): */
+.loeschen-card {
+  margin-top: 12px;
 }
 </style>

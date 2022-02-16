@@ -29,9 +29,8 @@
         <p class="mb-0">Hier können Sie einen neuen Termin für einen </p>
         <p class="mb-0">Patienten buchen. Wählen Sie den Patienten, </p>
         <p class="mb-0">einen Tag und die Uhrzeit aus. Ihr Termin </p>
-        <p class="mb-0">erscheint zunächst in "Unbestaetigte Termine". </p>
-        <p class="mb-0">Bestätigte Termine finden Sie dann in "Eigene </p>
-        <p class="mb-0">Termine". </p>
+        <p class="mb-0">erscheint nach Bestätigung des Patienten in </p>
+        <p class="mb-0">ihrem Kalender. </p>
         <template v-slot:activator="{ on }">
           <v-tab ripple v-on="on" @click="tab = 1" class="home-custom-tab">
             <div>Termin buchen</div>
@@ -40,10 +39,11 @@
         </template>
       </v-tooltip>
       <v-tooltip bottom>
-        <p class="mb-0">Hier finden Sie ihre gebuchten, aber noch </p>
-        <p class="mb-0">unbestätigten Termine. Wenn der Patient </p>
-        <p class="mb-0">diese bestätigt hat, erscheinen sie in </p>
-        <p class="mb-0">"Eigene Termine". </p>
+        <p class="mb-0">Hier finden Sie Ihre für den Patienten </p>
+        <p class="mb-0">gebuchten Termine, falls der Patient diese </p>
+        <p class="mb-0">bestätigt hat. Zudem finden Sie hier die vom </p>
+        <p class="mb-0">Patienten bei Ihnen gebuchten Termine, welche </p>
+        <p class="mb-0">Sie bestätigen oder ablehnen können. </p>
         <template v-slot:activator="{ on }">
           <v-tab
             ripple

@@ -55,9 +55,9 @@
             <v-list
               ripple
               v-bind:class="active"
-              rounded="lg"
+              rounded
               class="text-center"
-              color="rgb(241, 237, 237)"
+              color="blue-grey lighten-5"
             >
               <v-list-item
                 class="menu-buttons day"
@@ -129,23 +129,27 @@
                   </v-btn>
                 </template>
                 <template>
-                  <v-card>
+                  <v-card class="light-blue lighten-5">
                     <v-toolbar color="primary" dark>Termin löschen</v-toolbar>
-                    <v-card-text id="loeschen-card">
+                    <v-card-text class="loeschen-card">
                       Wollen Sie diesen Termin wirklich löschen?
                     </v-card-text>
                     <v-card-actions class="justify-end">
                       <v-btn
-                        id="loeschen-card-loeschen"
+                        class="abbrechen-buttons"
+                        rounded
+                        outlined
                         text
                         @click="deleteEvent"
                         >Löschen</v-btn
                       >
                       <v-btn
-                        class="abbrechen-buttons"
+                        class="erstellen-buttons"
+                        rounded
+                        outlined
                         text
                         @click="deleteDialog = false"
-                        >Abbrechen</v-btn
+                        >Zurück</v-btn
                       >
                     </v-card-actions>
                   </v-card>
@@ -158,11 +162,12 @@
             <v-card-actions class="justify-end">
               <v-btn
                 class="abbrechen-buttons"
+                rounded
+                outlined
                 text
-                color="secondary"
                 @click="selectedOpen = false"
               >
-                Abbrechen
+                Schließen
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -343,10 +348,6 @@ export default {
 #loeschen-card-loeschen:hover {
   background-color: rgb(240, 58, 58);
   color: white;
-}
-
-.abbrechen-buttons:hover {
-  background-color: darkgrey;
 }
 
 /* Calendar */
