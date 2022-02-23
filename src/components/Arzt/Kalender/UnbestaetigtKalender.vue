@@ -319,7 +319,11 @@ export default {
         element.color = "#00ff00";
       });
       unconfirmedEvents.forEach((element) => {
-        element.color = "#ff0000";
+        if(element.creator.toString() != this.$store.getters.getUID) {
+          element.color = "#ff0000";
+        } else {
+          element.color = "#0000ff";
+        }
       });
       this.events = ownEvents.concat(unconfirmedEvents);
     },

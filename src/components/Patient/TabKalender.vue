@@ -1,25 +1,13 @@
 <template>
   <v-card class="light-blue lighten-5" v-if="rights == 1 || rights == 4">
-    <v-tabs
-      v-model="tab"
-      background-color="transparent"
-      centered
-      icons-and-text
-      id="tabs"
-    >
+    <v-tabs v-model="tab" background-color="transparent" centered icons-and-text id="tabs">
       <v-tabs-slider></v-tabs-slider>
       <v-tooltip bottom>
         <p class="mb-0">Hier können Sie all ihre Termine hinzufügen, </p>
         <p class="mb-0">egal ob private Treffen oder wichtige </p>
         <p class="mb-0">Arzttermmine. (Nur Sie sehen diese Ansicht.) </p>
         <template v-slot:activator="{ on }">
-          <v-tab
-            ripple
-            v-on="on"
-            @click="tab = 0"
-            class="home-custom-tab"
-            style="margin-left: auto"
-          >
+          <v-tab ripple v-on="on" @click="tab = 0" class="home-custom-tab" style="margin-left: auto">
             <div>Eigene Termine</div>
             <v-icon class="tab-icon">mdi-calendar</v-icon>
           </v-tab>
@@ -44,18 +32,9 @@
         <p class="mb-0">hier die vom Arzt für Sie gebuchten Termine, </p>
         <p class="mb-0">welche Sie bestätigen oder ablehnen können. </p>
         <template v-slot:activator="{ on }">
-          <v-tab
-            ripple
-            v-on="on"
-            @click="tab = 2"
-            class="home-custom-tab"
-            id="unbestaetigt-tab"
-            style="margin-right: auto"
-          >
-            <v-badge
-              v-if="unconfirmedEvents.length > 0"
-              :content="unconfirmedEvents.length"
-              >Unbestaetigte Termine
+          <v-tab ripple v-on="on" @click="tab = 2" class="home-custom-tab" id="unbestaetigt-tab"
+            style="margin-right: auto">
+            <v-badge v-if="countBadge > 0" :content="countBadge" color="red">Unbestaetigte Termine
             </v-badge>
             <div v-else>Unbestaetigte Termine</div>
             <v-icon class="tab-icon">mdi-calendar-question</v-icon>
@@ -99,80 +78,92 @@
 
 
 <script>
-import EigenerKalender from "./Kalender/EigenerKalender";
-import BuchungKalender from "./Kalender/BuchungKalender";
-import UnbestaetigtKalender from "./Kalender/UnbestaetigtKalender";
-import NotAvailable from "../../components/NotAvailable";
-export default {
-  data() {
-    return {
-      tab: 0,
-      newLogo: false,
-    };
-  },
-  created() {
-    this.$store.dispatch("fetchUnconfirmedEvents", {
-      ownUid: this.$store.getters.getUID,
-      targetUid: this.$store.getters.getUID,
-    });
-    this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
-  },
-  props: {
-    value: Boolean,
-    editItem: null,
-  },
-  components: {
-    EigenerKalender,
-    NotAvailable,
-    BuchungKalender,
-    UnbestaetigtKalender,
-  },
-  computed: {
-    rights() {
-      return this.$store.getters.getRights;
+  import EigenerKalender from "./Kalender/EigenerKalender";
+  import BuchungKalender from "./Kalender/BuchungKalender";
+  import UnbestaetigtKalender from "./Kalender/UnbestaetigtKalender";
+  import NotAvailable from "../../components/NotAvailable";
+  export default {
+    data() {
+      return {
+        countBadge: 0,
+        tab: 0,
+        newLogo: false,
+      };
     },
-    unconfirmedEvents() {
-      return this.$store.getters.getOwnUnconfirmedEvents;
+    created() {
+      this.$store.dispatch("fetchUnconfirmedEvents", {
+        ownUid: this.$store.getters.getUID,
+        targetUid: this.$store.getters.getUID,
+      });
+      this.$store.dispatch("fetchOwnEvents", this.$store.getters.getUID);
     },
-  },
-};
+    props: {
+      value: Boolean,
+      editItem: null,
+    },
+    components: {
+      EigenerKalender,
+      NotAvailable,
+      BuchungKalender,
+      UnbestaetigtKalender,
+    },
+    computed: {
+      rights() {
+        return this.$store.getters.getRights;
+      },
+      unconfirmedEvents() {
+        return this.$store.getters.getOwnUnconfirmedEvents;
+      },
+    },
+    watch: {
+      unconfirmedEvents() {
+        var count = 0
+        this.unconfirmedEvents.forEach(element => {
+          if (element.creator.toString() != this.$store.getters.getUID) {
+            count++
+          }
+        });
+        this.countBadge = count
+      }
+    }
+  };
 </script>
 
 <style scoped>
-/* Tooltips */
-.v-tooltip__content {
+  /* Tooltips */
+  .v-tooltip__content {
     font-size: 12px !important;
     line-height: 1.2;
-}
+  }
 
-/* Icons */
-.tab-icon {
-  padding-bottom: 4px;
-}
+  /* Icons */
+  .tab-icon {
+    padding-bottom: 4px;
+  }
 
-/* Tabs */
-.home-custom-tab {
-  color: black !important;
-  border-radius: 8px;
-}
+  /* Tabs */
+  .home-custom-tab {
+    color: black !important;
+    border-radius: 8px;
+  }
 
-.home-custom-tab:hover {
-  background-color: rgb(202, 200, 200);
-  border-radius: 8px;
-}
+  .home-custom-tab:hover {
+    background-color: rgb(202, 200, 200);
+    border-radius: 8px;
+  }
 
-#tabs {
-  padding-top: 5px;
-  padding-bottom: 25px;
-}
+  #tabs {
+    padding-top: 5px;
+    padding-bottom: 25px;
+  }
 
-.v-tabs-slider-wrapper {
-  color: #007bff;
-  height: 4px !important;
-}
+  .v-tabs-slider-wrapper {
+    color: #007bff;
+    height: 4px !important;
+  }
 
-#unbestaetigt-tab {
-  min-width: 240px;
-  align-content: center;
-}
+  #unbestaetigt-tab {
+    min-width: 240px;
+    align-content: center;
+  }
 </style>

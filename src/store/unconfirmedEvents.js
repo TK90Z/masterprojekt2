@@ -79,6 +79,20 @@ const actions = {
         merge: true
       });
     }
+    const ownRef = doc(db, "Nutzer", event.uids.ownUid);
+    const ownSnap = await getDoc(ownRef);
+    if (ownSnap.exists()) {
+      await updateDoc(ownRef, {
+        unconfirmedEvents: arrayUnion(eventRef.id)
+      });
+    } else {
+      eventsObj = {
+        unconfirmedEvents: new Array(eventRef.id)
+      }
+      await setDoc(ownRef, eventsObj, {
+        merge: true
+      });
+    }
     dispatch('fetchUnconfirmedEvents', event.uids);
   },
 
