@@ -88,18 +88,22 @@ const actions = {
                     // https://firebase.google.com/docs/storage/web/handle-errors
                     switch (error.code) {
                         case 'storage/object-not-found':
+                            commit("setProfilePicture", null)
                             // File doesn't exist
                             break;
                         case 'storage/unauthorized':
+                            commit("setProfilePicture", null)
                             // User doesn't have permission to access the object
                             break;
                         case 'storage/canceled':
+                            commit("setProfilePicture", null)
                             // User canceled the upload
                             break;
 
                             // ...
 
                         case 'storage/unknown':
+                            commit("setProfilePicture", null)
                             // Unknown error occurred, inspect the server response
                             break;
                     }
