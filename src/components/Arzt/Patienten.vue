@@ -542,7 +542,7 @@ import NotAvailable from "../../components/NotAvailable";
 export default {
   data() {
     return {
-      loading: true,
+      loading: false,
       show: false,
       activePicker: null,
       menu: false,

@@ -47,14 +47,19 @@
       </v-container>
     </template>
   </v-card>
+  <NotAvailable v-else />
 </template>
 
 <script>
+import NotAvailable from "../../components/NotAvailable";
 export default {
   data: () => ({
     medicamentJson: null,
     medicamentImage: null,
   }),
+  components: {
+    NotAvailable,
+  },
   computed: {
     rights() {
       return this.$store.getters.getRights;

@@ -199,9 +199,11 @@
       </template>
     </v-dialog>
   </v-card>
+  <NotAvailable v-else />
 </template>
 
 <script>
+import NotAvailable from "../../components/NotAvailable";
 export default {
   data() {
     return {
@@ -274,6 +276,9 @@ export default {
   },
   mounted() {
     this.$store.dispatch("fetchUsers");
+  },
+  components: {
+    NotAvailable,
   },
   computed: {
     rights() {

@@ -250,7 +250,7 @@ import PackungsBeilage from "../../components/PackungsBeilage";
 export default {
   data() {
     return {
-      loading: true,
+      loading: false,
       show: false,
       leaflet: null,
       leafletDialog: false,
