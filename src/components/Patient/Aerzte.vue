@@ -5,6 +5,8 @@
     v-if="rights == 1 || rights == 4"
   >
     <v-data-iterator
+      :loading="loading"
+      loading-text="Ärzte werden geladen..."
       :items="allDoctors"
       :items-per-page.sync="itemsPerPage"
       :page.sync="page"
@@ -82,17 +84,18 @@
                   margin: 0px;
                   min-width: 300px;
                   min-height: 300px;
-                  padding: 10px;
+                  max-height: 300px;
                 "
               >
                 <img
                   v-bind:src="item.profileImageSrc"
                   alt=""
                   style="
-                    width: 100%;
+                    max-width: 100%;
                     margin: auto;
                     max-width: 300px;
-                    max-height: 300px;
+                    max-height: 100%;
+                    padding: 10px;
                   "
                 />
               </div>
@@ -132,6 +135,18 @@
             </v-card>
           </v-col>
         </v-row>
+      </template>
+
+      <template
+        v-slot:no-data
+      >
+        Es konnten leider keine Ärzte gefunden werden!
+      </template>
+
+      <template
+        v-slot:no-results
+      >
+        Es konnten leider keine Ärzte gefunden werden!
       </template>
 
       <template v-slot:footer>
@@ -243,6 +258,7 @@ import NotAvailable from "../../components/NotAvailable";
 export default {
   data() {
     return {
+      loading: true,
       show: false,
       rateDoctorDialog: false,
       rateDoctorUid: null,
@@ -278,6 +294,9 @@ export default {
   watch: {
     allDoctors(allDoctors) {
       this.$store.dispatch("loadAllDoctorsImages", allDoctors);
+      setTimeout(function(){
+                    this.loading = false
+                }, 2000);
     },
     windowWidth(width) {
       console.log(width);

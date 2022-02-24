@@ -1,7 +1,7 @@
 <template>
   <v-overlay :value="notAvailableDialog">
     <div>
-      Es tut uns leid. Leider ist diese Seite im Moment nicht verfügbar.
+      Es tut uns leid, aber Sie verfügen nicht über die benötigten Rechte um diese Seite einzusehen.
     </div>
     <v-btn
       :style="{ left: '50%', transform: 'translateX(-50%)' }"

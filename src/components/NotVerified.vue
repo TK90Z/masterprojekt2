@@ -1,8 +1,7 @@
 <template>
   <v-overlay :value="notVerifiedDialog">
     <div>
-      Bitte melden Sie sich an, um sich zu verifizieren und die Seite besuchen
-      zu können.
+      Es tut uns Leid aber Sie sind noch nicht verifiziert. Kontaktieren Sie bitte einen Administrator und warten Sie auf die Freigabe um diese Seite besuchen zu können.
     </div>
     <v-btn
       :style="{ left: '50%', transform: 'translateX(-50%)' }"
