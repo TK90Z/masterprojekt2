@@ -96,7 +96,7 @@
                                   </v-list-item>
                                 </v-list>
                               </template>
-                              <p v-else>{{ key }}</p>
+                              <p v-else>{{ key3 }}</p>
                             </v-expansion-panel-content>
                           </v-expansion-panel>
                         </v-expansion-panels>
